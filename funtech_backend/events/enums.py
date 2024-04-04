@@ -13,16 +13,6 @@ class EventFormatEnum(Enum):
     EXCURSION = 'excursion'
 
 
-class EventThemeEnum(Enum):
-    PROGRAMMING = 'programming'
-    DESIGN = 'design '
-    MANAGEMENT = 'management'
-    MARKETING = 'marketing'
-    ANALYTICS = 'analytics'
-    BUSINESS = 'business'
-    OTHER = 'other'
-
-
 class EventStatusEnum(Enum):
     REGISTRATION_OPEN = 'registration_open'
     REGISTRATION_CLOSE = 'registration_close'
@@ -32,3 +22,13 @@ class EventStatusEnum(Enum):
 class EventActivityStatusEnum(Enum):
     DRAFT = 'draft'
     ACTIVE_EVENT = 'active_event'
+
+
+# class EventThemeEnum(Enum):
+#     PROGRAMMING = 'programming'
+#     DESIGN = 'design '
+#     MANAGEMENT = 'management'
+#     MARKETING = 'marketing'
+#     ANALYTICS = 'analytics'
+#     BUSINESS = 'business'
+#     OTHER = 'other'

@@ -5,7 +5,6 @@ from events.enums import (
     EventActivityStatusEnum,
     EventFormatEnum,
     EventStatusEnum,
-    EventThemeEnum,
     EventTypeEnum,
 )
 
@@ -51,12 +50,6 @@ class Event(models.Model):
         ]
     )
 
-    theme = models.CharField(
-        verbose_name='Тематика',
-        max_length=255,
-        choices=[(theme.name, theme.value) for theme in EventThemeEnum]
-    )
-
     status = models.CharField(
         verbose_name='Статус',
         max_length=255,
@@ -98,3 +91,30 @@ class Program(models.Model):
     class Meta:
         verbose_name = 'Программа'
         verbose_name_plural = 'Программы'
+
+
+class Theme(models.Model):
+
+    name = models.CharField(
+        verbose_name='Название', max_length=255, unique=True
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Тематика'
+        verbose_name_plural = 'Тематики'
+
+
+class EventTheme(models.Model):
+
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Тематика {self.theme} мероприятия {self.event}'
+
+    class Meta:
+        verbose_name = 'Тематика мероприятия'
+        verbose_name_plural = 'Тематики мероприятий'

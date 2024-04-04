@@ -1,7 +1,13 @@
 
 from django.contrib import admin
+from django.shortcuts import redirect
 from django.urls import path
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
@@ -16,4 +22,8 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name='schema'),
         name='redoc'
     ),
+
+    path('', lambda request: redirect('admin/'))  # т.к. главной директории
+                                                  # нет, добавил переадресацию
+                                                  # в админку
 ]
