@@ -108,8 +108,12 @@ class Theme(models.Model):
 
 
 class EventTheme(models.Model):
+    """Тематика мероприятия"""
 
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    event = models.ForeignKey(
+        Event, on_delete=models.CASCADE, related_name='themes'
+    )
+
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
 
     def __str__(self):
