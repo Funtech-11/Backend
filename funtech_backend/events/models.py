@@ -13,7 +13,7 @@ from events.enums import (
 
 def get_upload_path(instance, filename):
     """Создание директории для хранения файлов отдельного мероприятия"""
-    event_folder = str(instance.event.event_id)
+    event_folder = instance.event.name
     return os.path.join('materials', event_folder, filename)
 
 
