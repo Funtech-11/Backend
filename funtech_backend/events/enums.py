@@ -24,11 +24,11 @@ class EventActivityStatusEnum(Enum):
     ACTIVE_EVENT = 'active_event'
 
 
-# class EventThemeEnum(Enum):
-#     PROGRAMMING = 'programming'
-#     DESIGN = 'design '
-#     MANAGEMENT = 'management'
-#     MARKETING = 'marketing'
-#     ANALYTICS = 'analytics'
-#     BUSINESS = 'business'
-#     OTHER = 'other'
+class EventThemeEnum(Enum):
+    PROGRAMMING = 'Разработка'
+    DESIGN = 'Дизайн '
+    MANAGEMENT = 'Менеджмент'
+    MARKETING = 'Маркетинг'
+    ANALYTICS = 'Аналитика'
+    BUSINESS = 'Бизнес'
+    OTHER = 'Другое'
