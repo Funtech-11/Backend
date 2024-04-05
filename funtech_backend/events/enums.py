@@ -2,26 +2,26 @@ from enum import Enum
 
 
 class EventTypeEnum(Enum):
-    OFFLINE = 'offline'
-    ONLINE = 'online'
+    OFFLINE = 'Оффлайн'
+    ONLINE = 'Онлайн'
 
 
 class EventFormatEnum(Enum):
-    CONFERENCE = 'conference'
-    MEETUP = 'meetup '
-    NETWORKING = 'networking'
-    EXCURSION = 'excursion'
+    CONFERENCE = 'Конференция'
+    MEETUP = 'Митап'
+    NETWORKING = 'Нетворкинг'
+    EXCURSION = 'Экскурсия'
 
 
 class EventStatusEnum(Enum):
-    REGISTRATION_OPEN = 'registration_open'
-    REGISTRATION_CLOSE = 'registration_close'
-    FINISHED = 'finished'
+    REGISTRATION_OPEN = 'Регистрация открыта'
+    REGISTRATION_CLOSE = 'Регистрация закрыта'
+    FINISHED = 'Завершено'
 
 
 class EventActivityStatusEnum(Enum):
-    DRAFT = 'draft'
-    ACTIVE_EVENT = 'active_event'
+    DRAFT = 'Черновик'
+    ACTIVE_EVENT = 'Активное мероприятие'
 
 
 class EventThemeEnum(Enum):

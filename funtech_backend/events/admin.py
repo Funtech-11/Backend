@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from events.models import Event, Program, EventTheme, Theme
+from events.models import Event, Program, EventTheme, Theme, Matetial, Video
 
 
 class ProgramInline(admin.StackedInline):
@@ -13,6 +13,16 @@ class EventThemeInline(admin.StackedInline):
     extra = 0
 
 
+class MatetialInline(admin.StackedInline):
+    model = Matetial
+    extra = 0
+
+
+class VideoInline(admin.StackedInline):
+    model = Video
+    extra = 0
+
+
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     list_display = (
@@ -21,16 +31,15 @@ class EventAdmin(admin.ModelAdmin):
         'status', 'activity_status', 'amount_programs', 'amount_event_themes'
     )
 
-    inlines = [ProgramInline, EventThemeInline]
+    inlines = [ProgramInline, EventThemeInline, MatetialInline, VideoInline]
 
     def amount_programs(self, obj):
         return obj.programs.count()
 
-    amount_programs.short_description = 'Кол-во программ'
-
     def amount_event_themes(self, obj):
         return obj.themes.count()
 
+    amount_programs.short_description = 'Кол-во программ'
     amount_event_themes.short_description = 'Кол-во тематик'
 
 

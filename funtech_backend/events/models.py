@@ -1,3 +1,5 @@
+import os
+
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -9,13 +11,18 @@ from events.enums import (
 )
 
 
+def get_upload_path(instance, filename):
+    """Создание директории для хранения файлов отдельного мероприятия"""
+    event_folder = str(instance.event.event_id)
+    return os.path.join('materials', event_folder, filename)
+
+
 class Event(models.Model):
-    """Модель мероприятия"""
+    """Мероприятие"""
 
     event_id = models.AutoField(primary_key=True)
 
     name = models.CharField(verbose_name='Название', max_length=255)
-
     date = models.DateField(verbose_name='Дата')
     time = models.TimeField(verbose_name='Время')
     city = models.CharField(verbose_name='Город', max_length=255)
@@ -76,6 +83,8 @@ class Event(models.Model):
 class Program(models.Model):
     """Программа мероприятия"""
 
+    program_id = models.AutoField(primary_key=True)
+
     name = models.CharField(verbose_name='Название', max_length=255)
     time = models.TimeField(verbose_name='Время')
     speaker = models.CharField(verbose_name='Докладчик', max_length=255)
@@ -94,6 +103,9 @@ class Program(models.Model):
 
 
 class Theme(models.Model):
+    """Тематика"""
+
+    theme_id = models.AutoField(primary_key=True)
 
     name = models.CharField(
         verbose_name='Название', max_length=255, unique=True
@@ -110,11 +122,11 @@ class Theme(models.Model):
 class EventTheme(models.Model):
     """Тематика мероприятия"""
 
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
+
     event = models.ForeignKey(
         Event, on_delete=models.CASCADE, related_name='themes'
     )
-
-    theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'Тематика {self.theme} мероприятия {self.event}'
@@ -122,3 +134,35 @@ class EventTheme(models.Model):
     class Meta:
         verbose_name = 'Тематика мероприятия'
         verbose_name_plural = 'Тематики мероприятий'
+
+
+class Matetial(models.Model):
+    """Материал мероприятия"""
+
+    material_id = models.AutoField(primary_key=True)
+
+    file = models.FileField(verbose_name='Файл', upload_to=get_upload_path)
+
+    event = models.ForeignKey(
+        Event, on_delete=models.CASCADE, related_name='materials'
+    )
+
+    class Meta:
+        verbose_name = 'Материал'
+        verbose_name_plural = 'Материалы'
+
+
+class Video(models.Model):
+    """Видеозапись мероприятия"""
+
+    video_id = models.AutoField(primary_key=True)
+
+    url = models.URLField(verbose_name='Сcылка')
+
+    event = models.OneToOneField(
+        Event, on_delete=models.CASCADE, related_name='video'
+    )
+
+    class Meta:
+        verbose_name = 'Видеозапись'
+        verbose_name_plural = 'Видеозаписи'
