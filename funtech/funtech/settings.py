@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'funtech_backend.urls'
+ROOT_URLCONF = 'funtech.urls'
 
 TEMPLATES = [
     {
@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'funtech_backend.wsgi.application'
+WSGI_APPLICATION = 'funtech.wsgi.application'
 
 
 # Database
