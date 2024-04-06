@@ -11,42 +11,51 @@ from events.enums import (
 )
 
 
-def get_upload_path(instance, filename):
+def get_upload_wallpaper(instance, filename):
     """Создание директории для хранения файлов отдельного мероприятия"""
-    event_folder = instance.event.name
-    return os.path.join('materials', event_folder, filename)
+    event_folder = instance.name
+    return os.path.join(event_folder, 'gallery', filename)
+
+
+def get_upload_path(instance, filename):
+    pass
 
 
 class Event(models.Model):
     """Мероприятие"""
 
-    event_id = models.AutoField(primary_key=True)
-
-    name = models.CharField(verbose_name='Название', max_length=255)
-    date = models.DateField(verbose_name='Дата')
-    time = models.TimeField(verbose_name='Время')
-    city = models.CharField(verbose_name='Город', max_length=255)
-
-    address = models.CharField(
-        verbose_name='Адрес', max_length=255, blank=True
+    event_id = models.AutoField(
+        primary_key=True
     )
-
-    number_of_paricipants = models.PositiveSmallIntegerField(
-        verbose_name='Число участников', validators=[MinValueValidator(1)],
+    name = models.CharField(
+        verbose_name='Название',
+        max_length=255
     )
-
+    date_time = models.DateTimeField(
+        verbose_name='Дата и время',
+        null=True
+    )
+    location = models.ForeignKey(
+        'Location',
+        on_delete=models.SET('location.building'),
+        null=True
+    )
+    number_of_participants = models.PositiveSmallIntegerField(
+        verbose_name='Число участников',
+        validators=[MinValueValidator(1)],
+    )
     information = models.CharField(
-        verbose_name='Описание', max_length=200, blank=True
+        verbose_name='Описание',
+        max_length=200, blank=True
     )
-
     event_type = models.CharField(
         verbose_name='Тип',
         max_length=255,
         choices=[
-            (event_type.name, event_type.value) for event_type in EventTypeEnum
+            (event_type.name, event_type.value)
+            for event_type in EventTypeEnum
         ]
     )
-
     event_format = models.CharField(
         verbose_name='Формат',
         max_length=255,
@@ -56,13 +65,14 @@ class Event(models.Model):
             for event_format in EventFormatEnum
         ]
     )
-
     status = models.CharField(
         verbose_name='Статус',
         max_length=255,
-        choices=[(status.name, status.value) for status in EventStatusEnum]
+        choices=[
+            (status.name, status.value)
+            for status in EventStatusEnum
+        ]
     )
-
     activity_status = models.CharField(
         verbose_name='Состояние',
         max_length=255,
@@ -71,6 +81,11 @@ class Event(models.Model):
             for activity in EventActivityStatusEnum
         ]
     )
+    wallpaper = models.ImageField(
+        verbose_name='Фото',
+        upload_to=get_upload_wallpaper,
+        null=True
+    )
 
     def __str__(self):
         return self.name
@@ -78,6 +93,40 @@ class Event(models.Model):
     class Meta:
         verbose_name = 'Мероприятие'
         verbose_name_plural = 'Мероприятия'
+
+
+class Location(models.Model):
+    "Адрес проведения"
+
+    location_id = models.AutoField(
+        primary_key=True
+    )
+    city = models.CharField(
+        verbose_name='Город',
+        max_length=255
+    )
+
+    address = models.CharField(
+        verbose_name='Адрес',
+        max_length=255,
+        blank=True
+    )
+    builing = models.CharField(
+        verbose_name='Строение',
+        max_length=255
+    )
+    metro_station = models.CharField(
+        verbose_name='Станция метро',
+        max_length=255,
+        blank=True
+    )
+
+    def __str__(self):
+        return f'{self.city}, {self.builing}'
+
+    class Meta:
+        verbose_name = 'Адрес'
+        verbose_name_plural = 'Адреса'
 
 
 class Program(models.Model):
