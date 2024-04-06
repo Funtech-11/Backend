@@ -1,25 +1,16 @@
 from django.contrib import admin
 
-from events.models import Event, EventTheme, Location, Program, Theme, Video
+from events.models import (
+    Event,
+    Location,
+    Program,
+    Speaker,
+    Theme,
+)
 
 
 class ProgramInline(admin.StackedInline):
     model = Program
-    extra = 0
-
-
-class EventThemeInline(admin.StackedInline):
-    model = EventTheme
-    extra = 0
-
-
-# class MatetialInline(admin.StackedInline):
-#     model = Matetial
-#     extra = 0
-
-
-class VideoInline(admin.StackedInline):
-    model = Video
     extra = 0
 
 
@@ -28,36 +19,35 @@ class EventAdmin(admin.ModelAdmin):
     list_display = (
         'event_id', 'name', 'date_time', 'location', 'number_of_participants',
         'information', 'event_type', 'event_format', 'status',
-        'activity_status', 'wallpaper', 'amount_programs', 'amount_themes'
+        'activity_status', 'wallpaper', 'theme'
     )
 
-    inlines = [ProgramInline, EventThemeInline, VideoInline]
-
-    def amount_programs(self, obj):
-        return obj.programs.count()
-
-    def amount_themes(self, obj):
-        return obj.themes.count()
-
-    amount_programs.short_description = 'Кол-во программ'
-    amount_themes.short_description = 'Кол-во тематик'
+    inlines = [ProgramInline]
 
 
 @admin.register(Program)
 class ProgramAdmin(admin.ModelAdmin):
     list_display = (
-        'pk', 'time', 'speaker', 'information', 'event'
+        'program_id', 'name', 'date_time', 'speaker', 'information', 'event'
     )
 
 
 @admin.register(Theme)
 class ThemeAdmin(admin.ModelAdmin):
     list_display = (
-        'pk', 'name'
+        'theme_id', 'name'
     )
+
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     list_display = (
         'location_id', 'city', 'address', 'builing', 'metro_station'
+    )
+
+
+@admin.register(Speaker)
+class SpeakerAdmin(admin.ModelAdmin):
+    list_display = (
+        'speaker_id', 'name', 'job', 'avatar'
     )
