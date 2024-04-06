@@ -12,17 +12,18 @@ from events.enums import (
 
 
 def get_upload_wallpaper_path(instance, filename):
-    event_folder = instance.name
+    event_folder = f'{instance.name}, {instance.location.city}'
     return os.path.join(event_folder, 'gallery', filename)
 
 
 def get_upload_speaker_avatar_path(instance, filename):
-    return os.path.join('speakers', instance.name)
+    return os.path.join('speakers', filename)
 
 
 def get_upload_material_path(instance, filename):
-    event_folder = instance.name
-    return os.path.join(event_folder, 'materials', filename)
+    event_folder = f'{instance.event.name}, {instance.event.location.city}'
+    program_folder = instance.name
+    return os.path.join(event_folder, program_folder, 'materials', filename)
 
 
 class Location(models.Model):
@@ -110,7 +111,7 @@ class Event(models.Model):
         verbose_name='Тип',
         max_length=255,
         choices=[
-            (event_type.name, event_type.value)
+            (event_type.value, event_type.name)
             for event_type in EventTypeEnum
         ]
     )
