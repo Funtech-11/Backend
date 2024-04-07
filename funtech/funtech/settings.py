@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#hgkdpp_voi@u@m9mr+k1yhahs40ep7s@ppgc@k2yn0#2%!eab'
+SECRET_KEY = os.getenv('SECRET_KEY', default='1@3$5^7*9)pOiUyTrEwQ')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'drf_spectacular',
     'users',
     'events',
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -83,6 +86,18 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# Postgres DB
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.getenv('ENGINE', default='django.db.backends.postgresql'),
+#         'NAME': os.getenv('DB_NAME', default='postgres'),
+#         'USER': os.getenv('POSTGRES_USER', default='postgres'),
+#         'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
+#         'HOST': os.getenv('DB_HOST', default='db'),
+#         'PORT': os.getenv('DB_PORT', default=5432)
+#     }
+# }
+
 
 AUTH_USER_MODEL = "users.User"
 
@@ -118,9 +133,16 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
+
+CORS_URLS_REGEX = r'^/api/.*$'
+
+# CORS_ALLOWED_ORIGINS = [ Включить при подключении фронта
+#    'http://localhost:3000',
+# ]
+
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -131,12 +153,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR / 'static')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False

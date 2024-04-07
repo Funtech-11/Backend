@@ -9,4 +9,4 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for status in EventThemeEnum:
             if not Theme.objects.filter(name=status.value):
-                Theme.objects.create(name=status.value)
+                Theme.objects.create(name=status.name)
