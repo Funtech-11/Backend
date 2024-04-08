@@ -44,8 +44,7 @@ class Location(models.Model):
     )
     address = models.CharField(
         verbose_name='Адрес',
-        max_length=255,
-        blank=True
+        max_length=255
     )
     builing = models.CharField(
         verbose_name='Строение',
@@ -205,7 +204,7 @@ class Speaker(models.Model):
     avatar = models.ImageField(
         verbose_name='Аватар',
         upload_to=get_upload_speaker_avatar_path,
-        null=True
+        blank=True
     )
 
     def __str__(self):
