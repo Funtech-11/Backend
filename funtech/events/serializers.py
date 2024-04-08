@@ -62,8 +62,8 @@ class EventSerializer(serializers.ModelSerializer):
     dateTime = serializers.DateTimeField(
         source='date_time'
     )
-    numberOfParticipants = serializers.IntegerField(
-        source='number_of_participants'
+    maxParticipants = serializers.IntegerField(
+        source='max_participants'
     )
     eventType = serializers.CharField(
         source='event_type'
@@ -78,8 +78,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = [
-            'eventId', 'name', 'dateTime', 'location',
-            'numberOfParticipants', 'information', 'eventType',
-            'eventFormat', 'status', 'activityStatus', 'wallpaper', 'theme',
-            'video', 'programs'
+            'eventId', 'name', 'dateTime', 'location', 'maxParticipants',
+            'information', 'eventType', 'eventFormat', 'status',
+            'activityStatus', 'wallpaper', 'theme', 'video', 'programs'
         ]

@@ -2,6 +2,9 @@ import os
 
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from users.models import User
 
 from events.enums import (
     EventActivityStatusEnum,
@@ -9,6 +12,7 @@ from events.enums import (
     EventStatusEnum,
     EventTypeEnum,
 )
+from datetime import datetime
 
 
 def get_upload_wallpaper_path(instance, filename):
@@ -82,6 +86,8 @@ class Theme(models.Model):
 class Event(models.Model):
     """Мероприятие"""
 
+    users = models.ForeignKey(User, related_name='events', on_delete=models.CASCADE)
+
     event_id = models.AutoField(
         primary_key=True
     )
@@ -97,12 +103,14 @@ class Event(models.Model):
         Location,
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name='events'
     )
-    number_of_participants = models.PositiveSmallIntegerField(
+    max_participants = models.PositiveSmallIntegerField(
         verbose_name='Число участников',
         validators=[MinValueValidator(1)],
     )
+
     information = models.CharField(
         verbose_name='Описание',
         max_length=200, blank=True
@@ -124,14 +132,6 @@ class Event(models.Model):
             for event_format in EventFormatEnum
         ]
     )
-    status = models.CharField(
-        verbose_name='Статус',
-        max_length=255,
-        choices=[
-            (status.name, status.value)
-            for status in EventStatusEnum
-        ]
-    )
     activity_status = models.CharField(
         verbose_name='Состояние',
         max_length=255,
@@ -143,7 +143,7 @@ class Event(models.Model):
     wallpaper = models.ImageField(
         verbose_name='Фото',
         upload_to=get_upload_wallpaper_path,
-        null=True
+        blank=True,
     )
     theme = models.ForeignKey(
         Theme,
@@ -154,6 +154,13 @@ class Event(models.Model):
     video = models.URLField(
         verbose_name='Ссылка на видеозапись'
     )
+
+    @property
+    def status(self):
+        if self.date_time.date() < datetime.now().date():
+            return EventStatusEnum.FINISHED.name
+        else:
+            return EventStatusEnum.REGISTRATION_OPEN.name
 
     def __str__(self):
         return self.name

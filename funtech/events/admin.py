@@ -31,10 +31,11 @@ class ThemeAdmin(admin.ModelAdmin):
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     list_display = (
-        'event_id', 'name', 'date_time', 'location', 'number_of_participants',
+        'event_id', 'name', 'date_time', 'location', 'max_participants',
         'information', 'event_type', 'event_format', 'status',
         'activity_status', 'wallpaper', 'theme'
     )
+    readonly_fields = ('status',)
 
     inlines = [ProgramInline]
 
