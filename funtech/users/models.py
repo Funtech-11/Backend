@@ -31,7 +31,8 @@ class User(AbstractUser):
         max_length=MAX_EXPERIENCE_CHARS,
         choices=[
             exp_type.value for exp_type in ExperienceEnum
-        ]
+        ],
+        null=True
     )
     preferred_format = models.CharField(
         verbose_name='Предпочитаемый формат',
