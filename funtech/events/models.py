@@ -1,10 +1,8 @@
 import os
+from datetime import datetime
 
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from users.models import User
 
 from events.enums import (
     EventActivityStatusEnum,
@@ -12,10 +10,14 @@ from events.enums import (
     EventStatusEnum,
     EventTypeEnum,
 )
-from datetime import datetime
 
 
 def get_upload_wallpaper_path(instance, filename):
+    event_folder = f'{instance.name}, {instance.location.city}'
+    return os.path.join(event_folder, 'wallpaper', filename)
+
+
+def get_upload_event_photos_path(instance, filename):
     event_folder = f'{instance.name}, {instance.location.city}'
     return os.path.join(event_folder, 'gallery', filename)
 
@@ -85,8 +87,6 @@ class Theme(models.Model):
 
 class Event(models.Model):
     """Мероприятие"""
-
-    users = models.ForeignKey(User, related_name='events', on_delete=models.CASCADE)
 
     event_id = models.AutoField(
         primary_key=True
@@ -168,6 +168,24 @@ class Event(models.Model):
     class Meta:
         verbose_name = 'Мероприятие'
         verbose_name_plural = 'Мероприятия'
+
+
+class Photo(models.Model):
+    """Фото в галерею"""
+
+    photo_id = models.AutoField(
+        primary_key=True
+    )
+    file = models.ImageField(
+        verbose_name='Фото',
+        upload_to=get_upload_wallpaper_path,
+        blank=True,
+    )
+    event = models.ForeignKey(
+        Event,
+        on_delete=models.CASCADE,
+        related_name='photos'
+    )
 
 
 class Speaker(models.Model):

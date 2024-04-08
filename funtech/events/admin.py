@@ -1,16 +1,15 @@
 from django.contrib import admin
 
-from events.models import (
-    Event,
-    Location,
-    Program,
-    Speaker,
-    Theme,
-)
+from events.models import Event, Location, Photo, Program, Speaker, Theme
 
 
 class ProgramInline(admin.StackedInline):
     model = Program
+    extra = 0
+
+
+class PhotoInline(admin.StackedInline):
+    model = Photo
     extra = 0
 
 
@@ -37,7 +36,7 @@ class EventAdmin(admin.ModelAdmin):
     )
     readonly_fields = ('status',)
 
-    inlines = [ProgramInline]
+    inlines = [ProgramInline, PhotoInline]
 
 
 @admin.register(Speaker)

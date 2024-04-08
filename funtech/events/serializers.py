@@ -12,6 +12,9 @@ class LocationSerializer(serializers.ModelSerializer):
         fields = [
             'locationId', 'city', 'address', 'builing', 'metroStation'
         ]
+        extra_kwargs = {
+            'locationId': {'required': False}
+        }
 
 
 class ThemeSerializer(serializers.ModelSerializer):
@@ -21,6 +24,9 @@ class ThemeSerializer(serializers.ModelSerializer):
         fields = [
              'name'
         ]
+        extra_kwargs = {
+            'themeId': {'required': False}
+        }
 
 
 class SpeakerSerializer(serializers.ModelSerializer):
@@ -31,6 +37,9 @@ class SpeakerSerializer(serializers.ModelSerializer):
         fields = [
             'speakerId', 'name', 'job', 'avatar'
         ]
+        extra_kwargs = {
+            'speakerId': {'required': False}
+        }
 
 
 class ProgramSerializer(serializers.ModelSerializer):
@@ -49,6 +58,9 @@ class ProgramSerializer(serializers.ModelSerializer):
             'programId', 'name', 'dateTime', 'speaker', 'information',
             'material'
         ]
+        extra_kwargs = {
+            'programId': {'required': False}
+        }
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -82,3 +94,6 @@ class EventSerializer(serializers.ModelSerializer):
             'information', 'eventType', 'eventFormat', 'status',
             'activityStatus', 'wallpaper', 'theme', 'video', 'programs'
         ]
+        extra_kwargs = {
+            'eventId': {'required': False}
+        }
