@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -12,6 +13,11 @@ from events.enums import (
 
 
 def get_upload_wallpaper_path(instance, filename):
+    event_folder = f'{instance.name}, {instance.location.city}'
+    return os.path.join(event_folder, 'wallpaper', filename)
+
+
+def get_upload_event_photos_path(instance, filename):
     event_folder = f'{instance.name}, {instance.location.city}'
     return os.path.join(event_folder, 'gallery', filename)
 
@@ -38,8 +44,7 @@ class Location(models.Model):
     )
     address = models.CharField(
         verbose_name='Адрес',
-        max_length=255,
-        blank=True
+        max_length=255
     )
     builing = models.CharField(
         verbose_name='Строение',
@@ -97,15 +102,18 @@ class Event(models.Model):
         Location,
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name='events'
     )
-    number_of_participants = models.PositiveSmallIntegerField(
+    max_participants = models.PositiveSmallIntegerField(
         verbose_name='Число участников',
         validators=[MinValueValidator(1)],
     )
+
     information = models.CharField(
         verbose_name='Описание',
-        max_length=200, blank=True
+        max_length=200,
+        blank=True
     )
     event_type = models.CharField(
         verbose_name='Тип',
@@ -124,14 +132,6 @@ class Event(models.Model):
             for event_format in EventFormatEnum
         ]
     )
-    status = models.CharField(
-        verbose_name='Статус',
-        max_length=255,
-        choices=[
-            (status.name, status.value)
-            for status in EventStatusEnum
-        ]
-    )
     activity_status = models.CharField(
         verbose_name='Состояние',
         max_length=255,
@@ -143,7 +143,7 @@ class Event(models.Model):
     wallpaper = models.ImageField(
         verbose_name='Фото',
         upload_to=get_upload_wallpaper_path,
-        null=True
+        blank=True,
     )
     theme = models.ForeignKey(
         Theme,
@@ -155,12 +155,37 @@ class Event(models.Model):
         verbose_name='Ссылка на видеозапись'
     )
 
+    @property
+    def status(self):
+        if self.date_time.date() < datetime.now().date():
+            return EventStatusEnum.FINISHED.name
+        else:
+            return EventStatusEnum.REGISTRATION_OPEN.name
+
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name = 'Мероприятие'
         verbose_name_plural = 'Мероприятия'
+
+
+class Photo(models.Model):
+    """Фото в галерею"""
+
+    photo_id = models.AutoField(
+        primary_key=True
+    )
+    file = models.ImageField(
+        verbose_name='Фото',
+        upload_to=get_upload_wallpaper_path,
+        blank=True,
+    )
+    event = models.ForeignKey(
+        Event,
+        on_delete=models.CASCADE,
+        related_name='photos'
+    )
 
 
 class Speaker(models.Model):
@@ -180,7 +205,7 @@ class Speaker(models.Model):
     avatar = models.ImageField(
         verbose_name='Аватар',
         upload_to=get_upload_speaker_avatar_path,
-        null=True
+        blank=True
     )
 
     def __str__(self):
