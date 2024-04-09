@@ -18,15 +18,15 @@ class CreateToken(APIView):
 
     def get(self, request):
         print(request)
-        print(request.args)
-        if request.args.get('code'):
-            code = request.args.get('code')
+        print(request.GET['code'])
+        if request.GET['code']:
+            code = request.GET['code']
 
         res = requests.post(f'https://oauth.yandex.ru/token', data={'grant_type': 'authorization_code',
                                                             'code': code,
                                                             'client_id': '6e0534534dffdfg',
                                                             'client_secret': '2566dfgdfgdfgd345345345345'})
         if "error" in res:
-            return Response({"error": res["error"]}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(res, status=status.HTTP_400_BAD_REQUEST)
         # Token creation!
-        return Response({"access": res["access"]}, status=status.HTTP_200_OK)
+        return Response(res, status=status.HTTP_200_OK)

@@ -11,7 +11,7 @@ from drf_spectacular.views import (
 )
 from events.views import EventViewSet
 from rest_framework.routers import SimpleRouter
-from users.views import RegisterUser
+from users.views import RegisterUser, CreateToken
 
 
 router = SimpleRouter()
@@ -43,6 +43,7 @@ urlpatterns = [
     # JWT-эндпоинты, для управления JWT-токенами:
     path('auth/', include('djoser.urls.jwt')),
     path('reg/', RegisterUser.as_view()),
+    path('token/', CreateToken.as_view()),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
