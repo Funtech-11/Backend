@@ -1,6 +1,11 @@
 from rest_framework import serializers
 
-from events.models import Event, Location, Program, Theme, Speaker
+from events.enums import (
+    EventActivityStatusEnum,
+    EventFormatEnum,
+    EventTypeEnum
+)
+from events.models import Event, Location, Program, Speaker, Theme
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -65,26 +70,39 @@ class ProgramSerializer(serializers.ModelSerializer):
 
 class EventSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
-    theme = ThemeSerializer()
-    programs = ProgramSerializer(many=True, read_only=True)
-
+    theme = ThemeSerializer(read_only=True)
+    programs = ProgramSerializer(
+        many=True,
+        read_only=True
+    )
     eventId = serializers.IntegerField(
-        source='event_id'
+        source='event_id',
+        required=False
     )
     dateTime = serializers.DateTimeField(
         source='date_time'
     )
+    location = serializers.PrimaryKeyRelatedField(
+        queryset=Location.objects.all(),
+        required=False
+    )
     maxParticipants = serializers.IntegerField(
         source='max_participants'
     )
-    eventType = serializers.CharField(
+    eventType = serializers.ChoiceField(
+        choices=[e_type.name for e_type in EventTypeEnum],
         source='event_type'
     )
-    eventFormat = serializers.CharField(
+    eventFormat = serializers.ChoiceField(
+        choices=[e_format.name for e_format in EventFormatEnum],
         source='event_format'
     )
-    activityStatus = serializers.CharField(
+    activityStatus = serializers.ChoiceField(
+        choices=[e_act_stat.name for e_act_stat in EventActivityStatusEnum],
         source='activity_status'
+    )
+    video = serializers.URLField(
+        required=False
     )
 
     class Meta:

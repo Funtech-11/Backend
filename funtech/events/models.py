@@ -112,7 +112,8 @@ class Event(models.Model):
 
     information = models.CharField(
         verbose_name='Описание',
-        max_length=200, blank=True
+        max_length=200,
+        blank=True
     )
     event_type = models.CharField(
         verbose_name='Тип',
