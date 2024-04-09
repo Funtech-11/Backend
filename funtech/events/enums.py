@@ -32,3 +32,10 @@ class EventThemeEnum(Enum):
     ANALYTICS = 'Аналитика'
     BUSINESS = 'Бизнес'
     OTHER = 'Другое'
+
+
+class ExperienceEnum(Enum):
+    NO_EXP = 'Нет опыта'
+    ONE_YEAR = 'От 1 года'
+    THREE_YEARS = 'От 3 лет'
+    FIVE_YEARS = 'От 5 лет'
