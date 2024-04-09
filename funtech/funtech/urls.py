@@ -11,6 +11,8 @@ from drf_spectacular.views import (
 )
 from events.views import EventViewSet
 from rest_framework.routers import SimpleRouter
+from users.views import RegisterUser
+
 
 router = SimpleRouter()
 # v1
@@ -33,13 +35,14 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name='schema'),
         name='redoc'
     ),
-    path('', lambda request: redirect('admin/')),  # т.к. главной директории
+ #   path('', lambda request: redirect('admin/')),  # т.к. главной директории
                                                   # нет, добавил переадресацию
                                                   # в админку
     # djoser URL (tokens)
     path('auth/', include('djoser.urls')),
     # JWT-эндпоинты, для управления JWT-токенами:
     path('auth/', include('djoser.urls.jwt')),
+    path('reg/', RegisterUser.as_view()),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
