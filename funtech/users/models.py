@@ -16,7 +16,6 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ('first_name',
                        'last_name')
 
-    password = None  # сбрасываем?
     first_name = models.CharField('Имя',
                                   max_length=MAX_NAME_PASSWORD_CHARS)
     last_name = models.CharField('Фамилия',
@@ -30,7 +29,7 @@ class User(AbstractUser):
         verbose_name='Опыт работы',
         max_length=MAX_EXPERIENCE_CHARS,
         choices=[
-            exp_type.value for exp_type in ExperienceEnum
+            exp_type.name for exp_type in ExperienceEnum
         ],
         null=True
     )
@@ -38,7 +37,7 @@ class User(AbstractUser):
         verbose_name='Предпочитаемый формат',
         max_length=MAX_EVENT_FORMAT_CHARS,
         choices=[
-            event_type.value for event_type in EventTypeEnum
+            event_type.name for event_type in EventTypeEnum
         ]
     )
 
