@@ -17,39 +17,7 @@ class UserAgreementInline(admin.StackedInline):
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = (
-        'pk', 'username', 'first_name', 'last_name', 'mobile_number',
-        'employment', 'position', 'experience', 'preferred_format'
-    )
-    inlines = [UserAgreementInline]
-
-
-@admin.register(Agreement)
-class AgreementAdmin(admin.ModelAdmin):
-    list_display = (
-        'text', 'link'
-    )
-
-
-@admin.register(UserAgreement)
-class UserAgreementAdmin(admin.ModelAdmin):
-    list_display = (
-        'user', 'agreement'
-    )
-
-
-@admin.register(Expertise)
-class ExpertiseAdmin(admin.ModelAdmin):
-    list_display = (
-       'name',
-    )
-
-
-@admin.register(Stack)
-class StackAdmin(admin.ModelAdmin):
-    list_display = (
-       'name', 'expertise'
-    )
+    ordering = ('last_name',)
 
 
 @admin.register(UserExpertise)
