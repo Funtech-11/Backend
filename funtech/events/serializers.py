@@ -5,7 +5,7 @@ from events.enums import (
     EventFormatEnum,
     EventTypeEnum
 )
-from events.models import Event, Location, Program, Speaker, Theme
+from events.models import Event, Location, Program, Speaker, Theme, UserEvent
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -60,7 +60,7 @@ class ProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = Program
         fields = [
-            'programId', 'name', 'dateTime', 'speaker', 'information',
+            'programId', 'name', 'dateTime', 'speaker', 'information', 'event',
             'material'
         ]
         extra_kwargs = {
@@ -114,4 +114,22 @@ class EventSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             'eventId': {'required': False}
+        }
+
+
+class UserEventSerializer(serializers.ModelSerializer):
+    # user
+    event = EventSerializer()
+
+    userEventId = serializers.IntegerField(
+        source='user_event_id'
+    )
+
+    class Meta:
+        model = UserEvent
+        fields = [
+            'userEventId', 'user', 'event', 'agree'
+        ]
+        extra_kwargs = {
+            'userEventId': {'required': False}
         }

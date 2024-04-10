@@ -1,6 +1,14 @@
 from django.contrib import admin
 
-from events.models import Event, Location, Photo, Program, Speaker, Theme
+from events.models import (
+    Event,
+    Location,
+    Photo,
+    Program,
+    Speaker,
+    Theme,
+    UserEvent
+)
 
 
 class ProgramInline(admin.StackedInline):
@@ -31,12 +39,19 @@ class ThemeAdmin(admin.ModelAdmin):
 class EventAdmin(admin.ModelAdmin):
     list_display = (
         'event_id', 'name', 'date_time', 'location', 'max_participants',
-        'information', 'event_type', 'event_format', 'status',
-        'activity_status', 'wallpaper', 'theme'
+        'information', 'event_type', 'event_format', 'activity_status',
+        'wallpaper', 'theme', 'video', 'status'
     )
     readonly_fields = ('status',)
 
     inlines = [ProgramInline, PhotoInline]
+
+
+@admin.register(Photo)
+class PhotoAdmin(admin.ModelAdmin):
+    list_display = (
+        'photo_id', 'file', 'event'
+    )
 
 
 @admin.register(Speaker)
@@ -49,5 +64,13 @@ class SpeakerAdmin(admin.ModelAdmin):
 @admin.register(Program)
 class ProgramAdmin(admin.ModelAdmin):
     list_display = (
-        'program_id', 'name', 'date_time', 'speaker', 'information', 'event'
+        'program_id', 'name', 'date_time', 'speaker', 'information', 'event',
+        'material'
+    )
+
+
+@admin.register(UserEvent)
+class UserEventAdmin(admin.ModelAdmin):
+    list_display = (
+        'user_event_id', 'user', 'event', 'agree'
     )
