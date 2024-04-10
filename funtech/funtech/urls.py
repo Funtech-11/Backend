@@ -9,12 +9,14 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-from events.views import EventViewSet
+from events.views import EventViewSet, LocationViewSet, SpeakerViewSet
 from rest_framework.routers import SimpleRouter
 
 router = SimpleRouter()
 # v1
 router.register(r'v1/events', EventViewSet)
+router.register(r'v1/speakers', SpeakerViewSet)
+router.register(r'v1/locations', LocationViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,9 +35,9 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name='schema'),
         name='redoc'
     ),
-    path('', lambda request: redirect('admin/'))  # т.к. главной директории
-                                                  # нет, добавил переадресацию
-                                                  # в админку
+    path('', lambda request: redirect('admin/')),  # т.к. главной директории
+                                                   # нет, добавил переадресацию
+                                                   # в админку
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
