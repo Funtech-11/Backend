@@ -18,8 +18,8 @@ class UserAgreementInline(admin.StackedInline):
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     list_display = (
-        'first_name', 'last_name', 'mobile_number', 'employment', 'position',
-        'experience', 'preferred_format'
+        'pk', 'username', 'first_name', 'last_name', 'mobile_number',
+        'employment', 'position', 'experience', 'preferred_format'
     )
     inlines = [UserAgreementInline]
 

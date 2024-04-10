@@ -9,8 +9,14 @@ from events.models import Event, Location, Program, Speaker, Theme, UserEvent
 
 
 class LocationSerializer(serializers.ModelSerializer):
-    locationId = serializers.IntegerField(source='location_id')
-    metroStation = serializers.CharField(source='metro_station')
+    locationId = serializers.IntegerField(
+        source='location_id',
+        required=False
+    )
+    metroStation = serializers.CharField(
+        source='metro_station',
+        required=False
+    )
 
     class Meta:
         model = Location
@@ -18,7 +24,8 @@ class LocationSerializer(serializers.ModelSerializer):
             'locationId', 'city', 'address', 'builing', 'metroStation'
         ]
         extra_kwargs = {
-            'locationId': {'required': False}
+            'locationId': {'required': False},
+            'metroStation': {'required': False}
         }
 
 
@@ -54,7 +61,8 @@ class ProgramSerializer(serializers.ModelSerializer):
     speaker = SpeakerSerializer()
 
     programId = serializers.IntegerField(
-        source='program_id'
+        source='program_id',
+        required=False
     )
     dateTime = serializers.DateTimeField(
         source='date_time'
@@ -73,7 +81,9 @@ class ProgramSerializer(serializers.ModelSerializer):
 
 class EventSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
-    theme = ThemeSerializer(read_only=True)
+    theme = ThemeSerializer(
+        read_only=True
+    )
     programs = ProgramSerializer(
         many=True,
         read_only=True
