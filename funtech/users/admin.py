@@ -20,8 +20,8 @@ class UserAdmin(BaseUserAdmin):
     ordering = ('last_name',)
 
 
-@admin.register(UserExpertise)
-class UserExpertiseAdmin(admin.ModelAdmin):
-    list_display = (
-        'user', 'expertise', 'stack'
-    )
+#@admin.register(UserExpertise)
+#class UserExpertiseAdmin(admin.ModelAdmin):
+#    list_display = (
+#        'user', 'expertise', 'stack'
+#    )

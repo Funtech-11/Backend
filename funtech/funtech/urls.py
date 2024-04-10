@@ -39,10 +39,6 @@ urlpatterns = [
         name='redoc'
     ),
     # path('', lambda request: redirect('admin/'))
-    # djoser URL (tokens)
-    path('auth/', include('djoser.urls')),
-    # JWT-эндпоинты, для управления JWT-токенами:
-    path('auth/', include('djoser.urls.jwt')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
