@@ -1,18 +1,26 @@
 import os
+from datetime import datetime
 
 from django.core.validators import MinValueValidator
 from django.db import models
+from users.models import User
 
 from events.enums import (
     EventActivityStatusEnum,
     EventFormatEnum,
     EventStatusEnum,
+    # EventThemeEnum,
     EventTypeEnum,
 )
 
 
-def get_upload_wallpaper_path(instance, filename):
-    event_folder = f'{instance.name}, {instance.location.city}'
+def get_upload_event_wallpaper_path(instance, filename):
+    event_folder = instance.name
+    return os.path.join(event_folder, 'wallpaper', filename)
+
+
+def get_upload_event_photos_path(instance, filename):
+    event_folder = instance.name
     return os.path.join(event_folder, 'gallery', filename)
 
 
@@ -21,16 +29,17 @@ def get_upload_speaker_avatar_path(instance, filename):
 
 
 def get_upload_material_path(instance, filename):
-    event_folder = f'{instance.event.name}, {instance.event.location.city}'
+    event_folder = instance.event.name
     program_folder = instance.name
     return os.path.join(event_folder, program_folder, 'materials', filename)
 
 
 class Location(models.Model):
-    "Адрес проведения"
+    """ Адрес проведения """
 
     location_id = models.AutoField(
-        primary_key=True
+        primary_key=True,
+        verbose_name='id'
     )
     city = models.CharField(
         verbose_name='Город',
@@ -42,7 +51,7 @@ class Location(models.Model):
         blank=True
     )
     builing = models.CharField(
-        verbose_name='Строение',
+        verbose_name='Место',
         max_length=255
     )
     metro_station = models.CharField(
@@ -55,18 +64,19 @@ class Location(models.Model):
         return f'{self.city}, {self.builing}'
 
     class Meta:
-        verbose_name = 'Адрес'
-        verbose_name_plural = 'Адреса'
+        verbose_name = 'Локация'
+        verbose_name_plural = 'Локации'
 
 
 class Theme(models.Model):
-    """Тематика"""
+    """ Тематика """
 
     theme_id = models.AutoField(
-        primary_key=True
+        primary_key=True,
+        verbose_name='id'
     )
     name = models.CharField(
-        verbose_name='Название',
+        verbose_name='Наименование',
         max_length=255,
         unique=True
     )
@@ -80,10 +90,11 @@ class Theme(models.Model):
 
 
 class Event(models.Model):
-    """Мероприятие"""
+    """ Мероприятие """
 
     event_id = models.AutoField(
-        primary_key=True
+        primary_key=True,
+        verbose_name='id'
     )
     name = models.CharField(
         verbose_name='Название',
@@ -95,23 +106,27 @@ class Event(models.Model):
     )
     location = models.ForeignKey(
         Location,
+        verbose_name='Место проведения',
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name='events'
     )
-    number_of_participants = models.PositiveSmallIntegerField(
-        verbose_name='Число участников',
+    max_participants = models.PositiveSmallIntegerField(
+        verbose_name='Максимальное кол-во участников',
         validators=[MinValueValidator(1)],
     )
+
     information = models.CharField(
         verbose_name='Описание',
-        max_length=200, blank=True
+        max_length=200,
+        blank=True
     )
     event_type = models.CharField(
         verbose_name='Тип',
         max_length=255,
         choices=[
-            (event_type.value, event_type.name)
+            (event_type.name, event_type.value)
             for event_type in EventTypeEnum
         ]
     )
@@ -124,14 +139,6 @@ class Event(models.Model):
             for event_format in EventFormatEnum
         ]
     )
-    status = models.CharField(
-        verbose_name='Статус',
-        max_length=255,
-        choices=[
-            (status.name, status.value)
-            for status in EventStatusEnum
-        ]
-    )
     activity_status = models.CharField(
         verbose_name='Состояние',
         max_length=255,
@@ -141,12 +148,13 @@ class Event(models.Model):
         ]
     )
     wallpaper = models.ImageField(
-        verbose_name='Фото',
-        upload_to=get_upload_wallpaper_path,
-        null=True
+        verbose_name='Обои',
+        upload_to=get_upload_event_wallpaper_path,
+        blank=True,
     )
     theme = models.ForeignKey(
         Theme,
+        verbose_name='Тематика',
         on_delete=models.SET_NULL,
         null=True,
         related_name='events'
@@ -154,6 +162,13 @@ class Event(models.Model):
     video = models.URLField(
         verbose_name='Ссылка на видеозапись'
     )
+
+    @property
+    def status(self):
+        if self.date_time.date() < datetime.now().date():
+            return EventStatusEnum.FINISHED.name
+        else:
+            return EventStatusEnum.REGISTRATION_OPEN.name
 
     def __str__(self):
         return self.name
@@ -163,11 +178,39 @@ class Event(models.Model):
         verbose_name_plural = 'Мероприятия'
 
 
+class Photo(models.Model):
+    """ Фото """
+
+    photo_id = models.AutoField(
+        primary_key=True,
+        verbose_name='id',
+    )
+    file = models.ImageField(
+        verbose_name='Фото',
+        upload_to=get_upload_event_photos_path,
+        blank=True,
+    )
+    event = models.ForeignKey(
+        Event,
+        verbose_name='Мероприятие',
+        on_delete=models.CASCADE,
+        related_name='photos'
+    )
+
+    def __str__(self):
+        return self.event.name
+
+    class Meta:
+        verbose_name = 'Фото'
+        verbose_name_plural = 'Фото'
+
+
 class Speaker(models.Model):
-    """Спикер мероприятия"""
+    """ Спикер """
 
     speaker_id = models.AutoField(
-        primary_key=True
+        primary_key=True,
+        verbose_name='id'
     )
     name = models.CharField(
         verbose_name='Имя',
@@ -180,22 +223,23 @@ class Speaker(models.Model):
     avatar = models.ImageField(
         verbose_name='Аватар',
         upload_to=get_upload_speaker_avatar_path,
-        null=True
+        blank=True
     )
 
     def __str__(self):
-        return f'{self.name} - {self.job}'
+        return f'{self.name}, {self.job}'
 
     class Meta:
-        verbose_name = 'Докладчик'
-        verbose_name_plural = 'Докладчики'
+        verbose_name = 'Спикер'
+        verbose_name_plural = 'Спикеры'
 
 
 class Program(models.Model):
-    """Программа мероприятия"""
+    """ Программа """
 
     program_id = models.AutoField(
-        primary_key=True
+        primary_key=True,
+        verbose_name='id'
     )
     name = models.CharField(
         verbose_name='Название',
@@ -207,6 +251,7 @@ class Program(models.Model):
     )
     speaker = models.ForeignKey(
         Speaker,
+        verbose_name='Cпикер',
         on_delete=models.SET_NULL,
         null=True,
         related_name='programs'
@@ -217,6 +262,7 @@ class Program(models.Model):
     )
     event = models.ForeignKey(
         Event,
+        verbose_name='Мероприятие',
         on_delete=models.CASCADE,
         related_name='programs'
     )
@@ -226,8 +272,39 @@ class Program(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return f'{self.speaker}: {self.name}'
 
     class Meta:
         verbose_name = 'Программа'
         verbose_name_plural = 'Программы'
+
+
+class UserEvent(models.Model):
+    """ Мероприятие пользователя """
+
+    user_event_id = models.AutoField(
+        primary_key=True,
+        verbose_name='id'
+    )
+    user = models.ForeignKey(
+        User,
+        verbose_name='Пользователь',
+        on_delete=models.CASCADE,
+        related_name='events'
+    )
+    event = models.ForeignKey(
+        Event,
+        verbose_name='Мероприятие',
+        on_delete=models.CASCADE,
+        related_name='users'
+    )
+    agree = models.BooleanField(
+        verbose_name='Согласен'
+    )
+
+    def __str__(self):
+        return f'{self.user}, {self.event}'
+
+    class Meta:
+        verbose_name = 'Соглашение'
+        verbose_name_plural = 'Соглашения'
