@@ -5,12 +5,18 @@ from events.enums import (
     EventFormatEnum,
     EventTypeEnum
 )
-from events.models import Event, Location, Program, Speaker, Theme
+from events.models import Event, Location, Program, Speaker, Theme, UserEvent
 
 
 class LocationSerializer(serializers.ModelSerializer):
-    locationId = serializers.IntegerField(source='location_id')
-    metroStation = serializers.CharField(source='metro_station')
+    locationId = serializers.IntegerField(
+        source='location_id',
+        required=False
+    )
+    metroStation = serializers.CharField(
+        source='metro_station',
+        required=False
+    )
 
     class Meta:
         model = Location
@@ -18,7 +24,8 @@ class LocationSerializer(serializers.ModelSerializer):
             'locationId', 'city', 'address', 'builing', 'metroStation'
         ]
         extra_kwargs = {
-            'locationId': {'required': False}
+            'locationId': {'required': False},
+            'metroStation': {'required': False}
         }
 
 
@@ -35,7 +42,10 @@ class ThemeSerializer(serializers.ModelSerializer):
 
 
 class SpeakerSerializer(serializers.ModelSerializer):
-    speakerId = serializers.IntegerField(source='speaker_id')
+    speakerId = serializers.IntegerField(
+        source='speaker_id',
+        required=False
+    )
 
     class Meta:
         model = Speaker
@@ -51,7 +61,8 @@ class ProgramSerializer(serializers.ModelSerializer):
     speaker = SpeakerSerializer()
 
     programId = serializers.IntegerField(
-        source='program_id'
+        source='program_id',
+        required=False
     )
     dateTime = serializers.DateTimeField(
         source='date_time'
@@ -60,7 +71,7 @@ class ProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = Program
         fields = [
-            'programId', 'name', 'dateTime', 'speaker', 'information',
+            'programId', 'name', 'dateTime', 'speaker', 'information', 'event',
             'material'
         ]
         extra_kwargs = {
@@ -70,7 +81,9 @@ class ProgramSerializer(serializers.ModelSerializer):
 
 class EventSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
-    theme = ThemeSerializer(read_only=True)
+    theme = ThemeSerializer(
+        read_only=True
+    )
     programs = ProgramSerializer(
         many=True,
         read_only=True
@@ -114,4 +127,22 @@ class EventSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             'eventId': {'required': False}
+        }
+
+
+class UserEventSerializer(serializers.ModelSerializer):
+    # user
+    event = EventSerializer()
+
+    userEventId = serializers.IntegerField(
+        source='user_event_id'
+    )
+
+    class Meta:
+        model = UserEvent
+        fields = [
+            'userEventId', 'user', 'event', 'agree'
+        ]
+        extra_kwargs = {
+            'userEventId': {'required': False}
         }
