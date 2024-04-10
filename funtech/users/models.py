@@ -3,42 +3,62 @@ from django.db import models
 
 from events.enums import EventTypeEnum, ExperienceEnum
 
-MAX_NAME_PASSWORD_CHARS = 30
+
+GENERAL_MAX_LENGTH_LIMIT = 255
 MAX_WORKPLACE_CHARS = 100
-MAX_LINK_CHARS = 100
 TRUNCATED_NAME = 10
-MAX_EVENT_FORMAT_CHARS = 255
-MAX_EXPERIENCE_CHARS = 20
 
 
 class User(AbstractUser):
 
     REQUIRED_FIELDS = ('first_name',
-                       'last_name')
+                       'last_name',
+                       'password')
+    USERNAME_FIELD = 'email'
 
-    first_name = models.CharField('Имя',
-                                  max_length=MAX_NAME_PASSWORD_CHARS)
-    last_name = models.CharField('Фамилия',
-                                 max_length=MAX_NAME_PASSWORD_CHARS)
-    mobile_number = models.PositiveSmallIntegerField()  # валидация формата?
-    employment = models.CharField('Место работы',
-                                  max_length=MAX_WORKPLACE_CHARS)
-    position = models.CharField('Должность',
-                                max_length=MAX_WORKPLACE_CHARS)
+    username = None
+    password = None
+
+    first_name = models.CharField(
+        'Имя',
+        max_length=GENERAL_MAX_LENGTH_LIMIT
+    )
+    last_name = models.CharField(
+        'Фамилия',
+        max_length=GENERAL_MAX_LENGTH_LIMIT
+    )
+    email = models.EmailField(
+        verbose_name='email',
+        max_length=GENERAL_MAX_LENGTH_LIMIT,
+        unique=True,
+    )
+    mobile_number = models.PositiveSmallIntegerField(null=True)  # валидация формата? +7(111)111-11-11
+    photo = models.ImageField(blank=True, null=True)
+    employment = models.CharField(
+        'Место работы',
+        max_length=MAX_WORKPLACE_CHARS,
+        null=True
+    )
+    position = models.CharField(
+        'Должность',
+        max_length=MAX_WORKPLACE_CHARS,
+        null=True
+    )
     experience = models.CharField(
         verbose_name='Опыт работы',
-        max_length=MAX_EXPERIENCE_CHARS,
+        max_length=GENERAL_MAX_LENGTH_LIMIT,
         choices=[
-            exp_type.name for exp_type in ExperienceEnum
+            (exp_type.name, exp_type.value) for exp_type in ExperienceEnum
         ],
         null=True
     )
     preferred_format = models.CharField(
         verbose_name='Предпочитаемый формат',
-        max_length=MAX_EVENT_FORMAT_CHARS,
+        max_length=GENERAL_MAX_LENGTH_LIMIT,
         choices=[
-            event_type.name for event_type in EventTypeEnum
-        ]
+            (event_type.name, event_type.value) for event_type in EventTypeEnum
+        ],
+        null=True
     )
 
     class Meta:
@@ -48,45 +68,56 @@ class User(AbstractUser):
 
 
 class Agreement(models.Model):
-    """ Соглашение пользователя. """
+    """ Соглашение. Создается админом. """
 
-    text = models.TextField('Текст соглашения')
-    link = models.CharField('Ссылка',
-                            max_length=MAX_LINK_CHARS,
-                            unique=True)
+    text = models.TextField(
+        'текст соглашения',
+        unique=True
+    )
+    is_required = models.BooleanField(
+        'отметка обязательное/необязательное'
+    )
 
     class Meta:
         verbose_name = 'соглашение'
         verbose_name_plural = 'соглашения'
 
     def __str__(self):
-        return self.id
+        return self.text[:TRUNCATED_NAME]
 
 
 class UserAgreement(models.Model):
-    """ Связь соглашение-пользователь. """
+    """ Соглашение пользователя. """
 
-    user = models.OneToOneField(
-        User,
-        'пользователь'
+    agreement = models.ForeignKey(
+        Agreement,
+        verbose_name='соглашение',
+        on_delete=models.CASCADE
     )
-    agreement = models.OneToOneField(
+    user = models.ForeignKey(
         User,
-        'соглашение'
+        verbose_name='пользователь',
+        on_delete=models.CASCADE
+    )
+    is_signed = models.BooleanField(
+        'cостояние соглашения',
+        null=True
     )
 
     class Meta:
         verbose_name = 'соглашение пользователя'
         verbose_name_plural = 'соглашения пользователя'
+        default_related_name = 'agreements'
         constraints = (
             models.UniqueConstraint(
                 fields=('user', 'agreement'),
                 name='unique_agreement'
-            )
+            ),
         )
 
     def __str__(self):
-        return self.user[:TRUNCATED_NAME]
+        return (f'Соглашение {self.agreement.id} пользователя '
+                f'{self.user.first_name} {self.user.last_name}')
 
 
 class Expertise(models.Model):
@@ -101,6 +132,7 @@ class Expertise(models.Model):
     class Meta:
         verbose_name = 'направление'
         verbose_name_plural = 'направления'
+        default_related_name = 'expertises'
 
     def __str__(self):
         return self.name[:TRUNCATED_NAME]
@@ -112,45 +144,48 @@ class Stack(models.Model):
     name = models.CharField(
         'Название',
         max_length=MAX_WORKPLACE_CHARS,
-        unique=True
     )
     expertise = models.ForeignKey(
         Expertise,
-        'Направление',
+        verbose_name='Направление',
         on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'стек'
         verbose_name_plural = 'стек'
+        default_related_name = 'stack_items'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('name', 'expertise'),
+                name='unique_stack'
+            ),
+        )
 
     def __str__(self):
         return self.name[:TRUNCATED_NAME]
 
 
 class UserExpertise(models.Model):
-    """ Связь пользователь-направление-стек. """
+    """ Связь пользователь-направление. """
 
     user = models.ForeignKey(
         User,
-        'Пользователь',
+        verbose_name='Пользователь',
         on_delete=models.CASCADE)
     expertise = models.ForeignKey(
         Expertise,
-        'Направление',
-        on_delete=models.CASCADE)
-    stack = models.ForeignKey(
-        Stack,
-        'Стек',
+        verbose_name='Направление',
         on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name = 'направление и стек пользователя'
-        verbose_name_plural = 'направления и стек пользователя'
+        verbose_name = 'направление пользователя'
+        verbose_name_plural = 'направления пользователя'
+        default_related_name = 'user_expertise'
         constraints = (
             models.UniqueConstraint(
                 fields=('user', 'expertise'),
                 name='unique_expertise'
-            )
+            ),
         )
 
     def __str__(self):

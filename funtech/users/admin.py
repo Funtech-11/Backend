@@ -5,7 +5,7 @@ from .models import User
 
 
 class UserAdmin(BaseUserAdmin):
-    pass
+    ordering = ('last_name',)
 
 
 admin.site.register(User, UserAdmin)
