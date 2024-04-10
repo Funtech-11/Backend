@@ -9,12 +9,13 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-from events.views import EventViewSet
+from events.views import EventViewSet, SpeakerViewSet
 from rest_framework.routers import SimpleRouter
 
 router = SimpleRouter()
 # v1
 router.register(r'v1/events', EventViewSet)
+router.register(r'v1/speakers', SpeakerViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

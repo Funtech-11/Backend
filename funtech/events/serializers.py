@@ -35,7 +35,10 @@ class ThemeSerializer(serializers.ModelSerializer):
 
 
 class SpeakerSerializer(serializers.ModelSerializer):
-    speakerId = serializers.IntegerField(source='speaker_id')
+    speakerId = serializers.IntegerField(
+        source='speaker_id',
+        required=False
+    )
 
     class Meta:
         model = Speaker
