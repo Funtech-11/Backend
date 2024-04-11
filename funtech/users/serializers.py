@@ -1,14 +1,14 @@
+from events.enums import EventTypeEnum
 from rest_framework import serializers
 
 from users.models import (
-    User,
     Agreement,
-    UserAgreement,
     Expertise,
     Stack,
+    User,
+    UserAgreement,
     UserExpertise
 )
-from events.enums import EventTypeEnum
 
 """ Сериализаторы объектов, которые создает админ. """
 

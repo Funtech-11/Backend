@@ -40,7 +40,7 @@ class EventAdmin(admin.ModelAdmin):
     list_display = (
         'event_id', 'name', 'date_time', 'location', 'max_participants',
         'information', 'event_type', 'event_format', 'activity_status',
-        'wallpaper', 'theme', 'video', 'status'
+        'wallpaper', 'theme', 'video', 'status', 'curent_participants'
     )
     readonly_fields = ('status',)
 

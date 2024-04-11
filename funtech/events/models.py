@@ -9,7 +9,6 @@ from events.enums import (
     EventActivityStatusEnum,
     EventFormatEnum,
     EventStatusEnum,
-    # EventThemeEnum,
     EventTypeEnum,
 )
 
@@ -167,8 +166,14 @@ class Event(models.Model):
     def status(self):
         if self.date_time.date() < datetime.now().date():
             return EventStatusEnum.FINISHED.name
+        elif self.users.count() >= self.max_participants:
+            return EventStatusEnum.REGISTRATION_CLOSE.name
         else:
             return EventStatusEnum.REGISTRATION_OPEN.name
+
+    @property
+    def curent_participants(self):
+        return self.users.count()
 
     def __str__(self):
         return self.name

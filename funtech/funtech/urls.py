@@ -2,7 +2,6 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.shortcuts import redirect
 from django.urls import include, path
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -11,8 +10,6 @@ from drf_spectacular.views import (
 )
 from events.views import EventViewSet, LocationViewSet, SpeakerViewSet
 from rest_framework.routers import SimpleRouter
-from users.views import RegisterUser, CreateToken
-
 
 router = SimpleRouter()
 # v1
@@ -38,7 +35,6 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name='schema'),
         name='redoc'
     ),
-    # path('', lambda request: redirect('admin/'))
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

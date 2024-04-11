@@ -1,34 +1,19 @@
-from rest_framework.decorators import action
-from django.shortcuts import redirect
-from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from rest_framework import viewsets, permissions, status, filters
 import requests
-from rest_framework.response import Response
+from django.shortcuts import redirect
+from rest_framework import status
 from rest_framework.mixins import (
     CreateModelMixin,
+    DestroyModelMixin,
     RetrieveModelMixin,
     UpdateModelMixin,
-    DestroyModelMixin,
 )
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet
 
-from .models import (
-    User,
-    Agreement,
-    UserAgreement,
-    Expertise,
-    Stack,
-    UserExpertise
-)
-from .serializers import (
-    UserSerializer,
-    AgreementSerializer,
-    UserAgreementSerializer,
-    ExpertiseSerializer,
-    StackSerializer,
-    UserExpertiseSerializer
-)
+from users.models import User
+from users.serializers import UserSerializer
 
 
 # events, finished_events -- actions

@@ -102,6 +102,9 @@ class EventSerializer(serializers.ModelSerializer):
     maxParticipants = serializers.IntegerField(
         source='max_participants'
     )
+    curentParticipants = serializers.IntegerField(
+        source='curent_participants'
+    )
     eventType = serializers.ChoiceField(
         choices=[e_type.name for e_type in EventTypeEnum],
         source='event_type'
@@ -122,8 +125,9 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
         fields = [
             'eventId', 'name', 'dateTime', 'location', 'maxParticipants',
-            'information', 'eventType', 'eventFormat', 'status',
-            'activityStatus', 'wallpaper', 'theme', 'video', 'programs'
+            'curentParticipants', 'information', 'eventType', 'eventFormat',
+            'status', 'activityStatus', 'wallpaper', 'theme', 'video',
+            'programs'
         ]
         extra_kwargs = {
             'eventId': {'required': False}

@@ -1,9 +1,7 @@
 # from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
 from events.enums import EventTypeEnum, ExperienceEnum
-
 
 GENERAL_MAX_LENGTH_LIMIT = 255
 MAX_WORKPLACE_CHARS = 100
@@ -15,10 +13,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ('first_name',
                        'last_name',
                        'password')
-    USERNAME_FIELD = 'email'
-
-    username = None
-    password = None
+    USERNAME_FIELD = 'username'
 
     first_name = models.CharField(
         'Имя',
