@@ -38,9 +38,10 @@ class ThemeAdmin(admin.ModelAdmin):
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     list_display = (
-        'event_id', 'name', 'date_time', 'location', 'max_participants',
-        'information', 'event_type', 'event_format', 'activity_status',
-        'wallpaper', 'theme', 'video', 'status', 'curent_participants'
+        'event_id', 'name', 'date_time_start', 'date_time_end', 'location',
+        'max_participants', 'information', 'event_type', 'event_format',
+        'activity_status', 'wallpaper', 'theme', 'video', 'status',
+        'curent_participants'
     )
     readonly_fields = ('status',)
 

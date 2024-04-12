@@ -99,7 +99,11 @@ class Event(models.Model):
         verbose_name='Название',
         max_length=255
     )
-    date_time = models.DateTimeField(
+    date_time_start = models.DateTimeField(
+        verbose_name='Дата и время',
+        null=True
+    )
+    date_time_end = models.DateTimeField(
         verbose_name='Дата и время',
         null=True
     )
@@ -264,7 +268,8 @@ class Program(models.Model):
     )
     information = models.TextField(
         verbose_name='Описание',
-        max_length=1000
+        max_length=1000,
+        blank=True
     )
     event = models.ForeignKey(
         Event,
@@ -274,6 +279,7 @@ class Program(models.Model):
     )
     material = models.FileField(
         verbose_name='Файл',
+        blank=True,
         upload_to=get_upload_material_path
     )
 

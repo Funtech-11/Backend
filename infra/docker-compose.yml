@@ -10,8 +10,7 @@ services:
       - ./.env
 
   backend:
-    # image: sivikgosh/backend_11
-    build: ../funtech/
+    image: sivikgosh/backend_11
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
