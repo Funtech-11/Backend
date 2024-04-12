@@ -159,7 +159,8 @@ class Event(models.Model):
         related_name='events'
     )
     video = models.URLField(
-        verbose_name='Ссылка на видеозапись'
+        verbose_name='Ссылка на видеозапись',
+        blank=True
     )
 
     @property
