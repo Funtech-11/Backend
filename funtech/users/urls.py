@@ -7,7 +7,7 @@ router = routers.DefaultRouter()
 # router.register(r'me', UserViewSet, basename='user')
 
 urlpatterns = [
-    path('me', UserViewSet.as_view({'get': 'retrieve'})),
+    path('me/', UserViewSet.as_view({'get': 'retrieve'})),
     path('reg/', RegisterUser.as_view()),
     path('token/', CreateToken.as_view()),
 ]
