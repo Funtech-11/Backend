@@ -8,7 +8,8 @@ from users.models import (
     Stack,
     UserExpertise
 )
-from events.enums import EventTypeEnum
+
+from events.models import UserEvent
 
 """ Сериализаторы объектов, которые создает админ. """
 
@@ -77,7 +78,42 @@ class UserSerializer(serializers.ModelSerializer):
             'programStack',
             'userAgreement'
         )
+    
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('username', instance.username)
+        instance.text = validated_data.get('email', instance.email)
+#        agreements = validated_data.pop('user_agreements')
+#        programmes = validated_data.pop('user_expertise')
+#        if agreements:
+#            for item in agreements:
+#                UserAgreement.objects.create(user=self.context['request'].user,
+#                                             agreement=item['agreement'],
+#                                             is_signed=item['is_signed'])
+        print(validated_data)
+        user_data = validated_data.pop('userExper')
+        user = validated_data.pop('user')
+        UserExpertise.objects.filter(user=user).delete()
+        for item in user_data:
+            for stack_item in item['stack']:
+                UserExpertise.objects.create(stack_id=stack_item,
+                                            expertise_id=item['expertise']['pk'],
+                                            user=user)
 
-    def validate_programStack(self, value):
-        # валидировать, что стэк принадлежит своему направлению
-        pass
+        instance.save()
+        print(User.objects.get(pk=1))
+        us = User.objects.get(pk=1)
+        print(us.userExper.all())
+        return instance
+
+    def to_representation(self, instance):
+        serializers = UserDetailSerializer(instance, context=self.context)
+        return serializers.data
+
+
+class TicketSerializer(serializers.ModelSerializer):
+    event = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = UserEvent
+        fields = '__all__'
+        read_only_fields = ('__all__',)
