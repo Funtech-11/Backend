@@ -11,11 +11,15 @@ AGREEMENTS = (
     ('текст3', True)
 )
 
-STACK = {
-    'Backend': ('Java', 'C++', 'Go', 'Другое'),
-    'Frontend': ('Javascript', 'Typescript', 'Другое'),
-    'Mobile': ('Kotlin', 'Swift', 'Другое')
-}
+EXPERTISE = (
+    'Backend',
+    'Frontend',
+    'Mobile'
+)
+
+STACK = ('Java', 'C++', 'Go', 'Другое',
+         'Javascript', 'Typescript',
+         'Kotlin', 'Swift')
 
 
 class Command(BaseCommand):
@@ -35,12 +39,14 @@ class Command(BaseCommand):
                                              is_required=agreement[1])
             sys.stdout.write('Загрузка соглашений завершена\n')
 
-            for expertise, stack in STACK.items():
-                if not Expertise.objects.filter(name=expertise):
-                    object = Expertise.objects.create(name=expertise)
-                    for stack_item in stack:
-                        Stack.objects.create(name=stack_item,
-                                             expertise=object)
+            for stack in STACK:
+                if not Stack.objects.filter(name=stack):
+                    Stack.objects.create(name=stack)
+            
+            for item in EXPERTISE:
+                if not Expertise.objects.filter(name=item):
+                    Expertise.objects.create(name=item)
             sys.stdout.write('Загрузка направлений и стэка завершена\n')
+
         except Exception as e:
             sys.stdout.write(f'Ошибка при загрузке данных: {e}')

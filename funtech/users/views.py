@@ -32,10 +32,13 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()  # + prefetch_related 'events'
     permission_classes = (IsAuthenticated,)
-    http_method_names = ['get', 'patch', 'detail']
+    http_method_names = ['get', 'patch']
 
     def get_object(self):
         return self.request.user
+    
+    def perform_update(self, serializer):
+        serializer.save('userAgreements')
 
 
 class RegisterUser(APIView):

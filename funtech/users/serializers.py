@@ -26,6 +26,7 @@ class StackSerializer(serializers.ModelSerializer):
 
 
 class ExpertiseSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Expertise
         fields = '__all__'
@@ -35,15 +36,21 @@ class ExpertiseSerializer(serializers.ModelSerializer):
 
 
 class UserExpertiseSerializer(serializers.ModelSerializer):
+    user = 
+    expertise = 
+    stack =
+
     class Meta:
         model = UserExpertise
         fields = '__all__'
 
 
 class UserAgreementSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = UserAgreement
         fields = '__all__'
+        read_only_fields = ('user',)
 
 
 """ Пользователь. """
@@ -55,9 +62,11 @@ class UserSerializer(serializers.ModelSerializer):
         choices=[(choice.name, choice.value) for choice in EventTypeEnum],
         source='preferred_format'
     )
-    educationPrograms = ExpertiseSerializer(many=True)
-    programStack = StackSerializer(many=True)
-    userAgreement = UserAgreementSerializer()
+    educationPrograms = UserExpertiseSerializer(many=True,
+                                                source='user_expertise')
+    #programStack = StackSerializer(many=True)
+    userAgreements = UserAgreementSerializer(many=True,
+                                             source='user_agreements')
 
     class Meta:
         model = User
@@ -68,16 +77,25 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'mobile_number',
             'photo',
-            'password',
             'workPlace',
             'position',
             'experience',
             'participationFormat',
             'educationPrograms',
-            'programStack',
-            'userAgreement'
+            #'programStack',
+            'userAgreements'
         )
+    
+    def update(self, instance, validated_data):
+        agreements = validated_data.pop('user_agreements')
+        programmes = validated_data.pop('user_expertise')
+        if agreements:
+            for item in agreements:
+                UserAgreement.objects.create(user=self.context['request'].user,
+                                             agreement=item['agreement'],
+                                             is_signed=item['is_signed'])
+        if programmes:
+            for item in programmes:
+                UserExpertise.objects.create()
 
-    def validate_programStack(self, value):
-        # валидировать, что стэк принадлежит своему направлению
-        pass
+        return super().update(instance, validated_data)

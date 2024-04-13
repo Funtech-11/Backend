@@ -3,4 +3,4 @@ WORKDIR /app
 COPY . .
 RUN pip3 install --upgrade pip \
     && pip3 install -r requirements.txt --no-cache-dir
-ENTRYPOINT [ "/app/entrypoint.sh" ]
+ENTRYPOINT [ "./entrypoint.sh" ]
