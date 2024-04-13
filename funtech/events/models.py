@@ -105,7 +105,7 @@ class Event(models.Model):
     )
     date_time_end = models.DateTimeField(
         verbose_name='Дата и время',
-        null=True
+        blank=True
     )
     location = models.ForeignKey(
         Location,
@@ -264,6 +264,7 @@ class Program(models.Model):
         verbose_name='Cпикер',
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name='programs'
     )
     information = models.TextField(

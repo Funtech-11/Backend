@@ -96,7 +96,8 @@ class EventSerializer(serializers.ModelSerializer):
         source='date_time_start'
     )
     dateTimeEnd = serializers.DateTimeField(
-        source='date_time_end'
+        source='date_time_end',
+        required=False
     )
     location = serializers.PrimaryKeyRelatedField(
         queryset=Location.objects.all(),
@@ -106,7 +107,8 @@ class EventSerializer(serializers.ModelSerializer):
         source='max_participants'
     )
     curentParticipants = serializers.IntegerField(
-        source='curent_participants'
+        source='curent_participants',
+        read_only=True
     )
     eventType = serializers.ChoiceField(
         choices=[e_type.name for e_type in EventTypeEnum],
