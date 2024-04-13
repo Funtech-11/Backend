@@ -25,6 +25,16 @@ class StackSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class StackDetailSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='stack.pk')
+    name = serializers.CharField(source='stack.name')
+    expertise = serializers.CharField(source='expertise.name')
+
+    class Meta:
+        model = Stack
+        fields = ('id', 'name', 'expertise')
+
+
 class ExpertiseSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -45,12 +55,12 @@ class UserExpertiseSerializer(serializers.ModelSerializer):
 
 
 class UserExpertiseDetailSerializer(serializers.ModelSerializer):
-    expertise = serializers.IntegerField(source="expertise.pk")
-    stack = StackSerializer()
+    id = serializers.IntegerField(source='expertise.pk')
+    name = serializers.CharField(source='expertise.name')
 
     class Meta:
-        model = UserExpertise
-        fields = ('stack', 'expertise')
+        model = Expertise
+        fields = ('id', 'name')
 
 
 class UserAgreementSerializer(serializers.ModelSerializer):
@@ -64,14 +74,17 @@ class UserAgreementSerializer(serializers.ModelSerializer):
 """ Пользователь. """
 
 
-class UserDetailSerializer(serializers.ModelSerializer):
+class UserDetailSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    first_name = serializers.CharField()
+    email = serializers.EmailField()
     workPlace = serializers.CharField(source='employment')
     participationFormat = serializers.ChoiceField(
         choices=[(choice.name, choice.value) for choice in EventTypeEnum],
         source='preferred_format'
     )
     educationPrograms = UserExpertiseDetailSerializer(many=True, source='userExper')
-    #programStack = StackSerializer(many=True)
+    programStack = StackDetailSerializer(many=True, source='userExper')
     userAgreements = UserAgreementSerializer(many=True,
                                              source='user_agreements')
 
@@ -82,17 +95,10 @@ class UserDetailSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'email',
-            'mobile_number',
-            'photo',
-            'workPlace',
-            'position',
-            'experience',
-            'participationFormat',
             'educationPrograms',
-            #'programStack',
+            'programStack',
             'userAgreements'
         )
-
 
 
 class UserSerializer(serializers.ModelSerializer):
