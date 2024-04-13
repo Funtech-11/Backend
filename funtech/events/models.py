@@ -307,6 +307,11 @@ class UserEvent(models.Model):
     agree = models.BooleanField(
         verbose_name='Согласен'
     )
+    qr_code = models.CharField(
+        'QR код',
+        max_length=50,
+        null=True  # add validation
+    )
 
     def __str__(self):
         return f'{self.user}, {self.event}'
