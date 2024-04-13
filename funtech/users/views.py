@@ -81,6 +81,13 @@ class CreateToken(APIView):
                         status=status.HTTP_200_OK)
 
 
+class LogoutView(APIView):
+    """Представление выхода пользователя."""
+    def post(self, request):
+        Token.objects.get(key=request.auth).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 # class UserDetailView(APIView):
 
 #     permission_classes = (OwnerOrReadOnly,)
