@@ -92,8 +92,11 @@ class EventSerializer(serializers.ModelSerializer):
         source='event_id',
         required=False
     )
-    dateTime = serializers.DateTimeField(
-        source='date_time'
+    dateTimeStart = serializers.DateTimeField(
+        source='date_time_start'
+    )
+    dateTimeEnd = serializers.DateTimeField(
+        source='date_time_end'
     )
     location = serializers.PrimaryKeyRelatedField(
         queryset=Location.objects.all(),
@@ -124,10 +127,10 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = [
-            'eventId', 'name', 'dateTime', 'location', 'maxParticipants',
-            'curentParticipants', 'information', 'eventType', 'eventFormat',
-            'status', 'activityStatus', 'wallpaper', 'theme', 'video',
-            'programs'
+            'eventId', 'name', 'dateTimeStart', 'dateTimeEnd', 'location',
+            'maxParticipants', 'curentParticipants', 'information',
+            'eventType', 'eventFormat', 'status', 'activityStatus',
+            'wallpaper', 'theme', 'video', 'programs'
         ]
         extra_kwargs = {
             'eventId': {'required': False}
