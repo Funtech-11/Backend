@@ -12,6 +12,7 @@ from users.models import (
 from events.models import UserEvent
 
 """ Сериализаторы объектов, которые создает админ. """
+""" ПРОВЕРКА """
 
 
 class AgreementSerializer(serializers.ModelSerializer):
