@@ -149,8 +149,8 @@ class Stack(models.Model):
         verbose_name_plural = 'стек'
         default_related_name = 'stack_items'
 
-    def __str__(self):
-        return self.name[:TRUNCATED_NAME]
+#    def __str__(self):
+#        return self.name[:TRUNCATED_NAME]
 
 
 class UserExpertise(models.Model):
@@ -159,24 +159,25 @@ class UserExpertise(models.Model):
     user = models.ForeignKey(
         User,
         verbose_name='Пользователь',
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE,
+        related_name='userExper')
     expertise = models.ForeignKey(
         Expertise,
         verbose_name='Направление',
         on_delete=models.CASCADE)
     stack = models.ForeignKey(Stack,
-                              on_delete=models.CASCADE)
+                              on_delete=models.CASCADE,
+                              blank=True)
 
     class Meta:
         verbose_name = 'направление пользователя'
         verbose_name_plural = 'направления пользователя'
-        default_related_name = 'user_expertise'
-        constraints = (
-            models.UniqueConstraint(
-                fields=('user', 'expertise'),
-                name='unique_expertise'
-            ),
-        )
+#        constraints = (
+#            models.UniqueConstraint(
+#                fields=('user', 'expertise', 'stack'),
+#                name='unique_expertise'
+#            ),
+#        )
 
-    def __str__(self):
-        return f' Направление и стек пользователя {self.user[:TRUNCATED_NAME]}'
+#    def __str__(self):
+#        return f' Направление и стек пользователя {self.user[:TRUNCATED_NAME]}'

@@ -38,7 +38,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return self.request.user
     
     def perform_update(self, serializer):
-        serializer.save('userAgreements')
+        serializer.save(user=self.request.user)
 
 
 class RegisterUser(APIView):
@@ -69,7 +69,8 @@ class CreateToken(APIView):
                                    res.json()["access_token"]})
         user = cl.json()
         print(user)
-        user, _ = User.objects.get_or_create(email=user['default_email'])
+        user, _ = User.objects.get_or_create(email=user['default_email'],
+                                             username=user['login'])
         print(user)
         try:
             token = Token.objects.get(user=user)
