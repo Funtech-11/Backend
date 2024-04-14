@@ -115,6 +115,7 @@ class Event(models.Model):
     max_participants = models.PositiveSmallIntegerField(
         verbose_name='Максимальное кол-во участников',
         validators=[MinValueValidator(1)],
+        null=True
     )
 
     information = models.CharField(
