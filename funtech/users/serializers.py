@@ -9,6 +9,7 @@ from users.models import (
     UserAgreement,
     UserExpertise
 )
+from events.models import UserEvent
 
 """ Сериализаторы объектов, которые создает админ. """
 
@@ -147,8 +148,8 @@ class UserSerializer(serializers.ModelSerializer):
         for item in user_data:
             for stack_item in item['stack']:
                 UserExpertise.objects.create(stack_id=stack_item,
-                                            expertise_id=item['expertise']['pk'],
-                                            user=user)
+                                             expertise_id=item['expertise']['pk'],
+                                             user=user)
 
         instance.save()
         print(User.objects.get(pk=1))
@@ -159,3 +160,11 @@ class UserSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         serializers = UserDetailSerializer(instance, context=self.context)
         return serializers.data
+
+class TicketSerializer(serializers.ModelSerializer):
+    event = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = UserEvent
+        fields = '__all__'
+        read_only_fields = ('__all__',)

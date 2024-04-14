@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.generics import ListAPIView
 from rest_framework import viewsets, permissions, status, filters
 from rest_framework.authtoken.models import Token
 from users.permissions import OwnerOrReadOnly
@@ -17,13 +18,10 @@ from .models import (
     Stack,
     UserExpertise
 )
+from events.models import UserEvent
 from .serializers import (
     UserSerializer,
-    AgreementSerializer,
-    UserAgreementSerializer,
-    ExpertiseSerializer,
-    StackSerializer,
-    UserExpertiseSerializer
+    TicketSerializer
 )
 
 
@@ -87,6 +85,13 @@ class LogoutView(APIView):
     def post(self, request):
         Token.objects.get(key=request.auth).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class TicketView(ListAPIView):
+    serializer_class = TicketSerializer
+
+    def get_queryset(self):
+        qs = UserEvent.objects.filter(user=self.request.user)
+        return qs
 
 
 # class UserDetailView(APIView):
