@@ -1,13 +1,15 @@
 from events.enums import EventTypeEnum
 from rest_framework import serializers
 
+from events.models import UserEvent
+
 from users.models import (
     Agreement,
     Expertise,
     Stack,
     User,
     UserAgreement,
-    UserExpertise
+    UserExpertise,
 )
 
 """ Сериализаторы объектов, которые создает админ. """
@@ -79,6 +81,10 @@ class UserDetailSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     email = serializers.EmailField()
     workPlace = serializers.CharField(source='employment')
+    mobile = serializers.IntegerField()
+    last_name = serializers.CharField()
+    workPlace = serializers.CharField()
+    photo = serializers.ImageField()
     participationFormat = serializers.ChoiceField(
         choices=[(choice.name, choice.value) for choice in EventTypeEnum],
         source='preferred_format'
@@ -94,6 +100,10 @@ class UserDetailSerializer(serializers.Serializer):
             'id',
             'first_name',
             'last_name',
+            'mobile_number',
+            'photo',
+            'workPlace',
+            'position',
             'email',
             'educationPrograms',
             'programStack',
@@ -108,7 +118,6 @@ class UserSerializer(serializers.ModelSerializer):
         source='preferred_format'
     )
     educationPrograms = UserExpertiseSerializer(many=True, source='userExper')
-    #programStack = StackSerializer(many=True)
     userAgreements = UserAgreementSerializer(many=True,
                                              source='user_agreements')
 
@@ -129,18 +138,10 @@ class UserSerializer(serializers.ModelSerializer):
             #'programStack',
             'userAgreements'
         )
-    
+
     def update(self, instance, validated_data):
         instance.name = validated_data.get('username', instance.username)
         instance.text = validated_data.get('email', instance.email)
-#        agreements = validated_data.pop('user_agreements')
-#        programmes = validated_data.pop('user_expertise')
-#        if agreements:
-#            for item in agreements:
-#                UserAgreement.objects.create(user=self.context['request'].user,
-#                                             agreement=item['agreement'],
-#                                             is_signed=item['is_signed'])
-        print(validated_data)
         user_data = validated_data.pop('userExper')
         user = validated_data.pop('user')
         UserExpertise.objects.filter(user=user).delete()
@@ -151,11 +152,33 @@ class UserSerializer(serializers.ModelSerializer):
                                             user=user)
 
         instance.save()
-        print(User.objects.get(pk=1))
-        us = User.objects.get(pk=1)
-        print(us.userExper.all())
         return instance
 
     def to_representation(self, instance):
         serializers = UserDetailSerializer(instance, context=self.context)
         return serializers.data
+
+
+class UserEventSerializer(serializers.ModelSerializer):
+
+    educationPrograms = UserExpertiseSerializer(many=True, source='user.userExper')
+    userAgreements = UserAgreementSerializer(many=True,
+                                             source='user.user_agreements')
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'first_name',
+            'last_name',
+            'email',
+            'educationPrograms',
+            'userAgreements'
+        )
+
+
+class UserEventCreateSerializer(UserEventSerializer):
+
+    class Meta:
+        model = UserEvent
+        fields = '__all__'
