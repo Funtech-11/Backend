@@ -101,18 +101,29 @@ class TicketView(ListAPIView):
 class UserEventView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, pk):
+    def get(self, request):
 
         user = User.objects.get(pk=request.user.pk)
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request, pk):
+    def post(self, request):
 
         user = User.objects.get(pk=request.user.pk)
-        serializer = UserEventSerializer(data=request.data)
+        print(user)
+        event_id = request.data.pop('event')
+        serializer = UserSerializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        serializer.save(author=user)
+        serializer.save(user=self.request.user)
+        event = Event.objects.get(pk=event_id)
+        agree = request.data['userAgreements'][0]['is_signed']
+        try:
+            us = UserEvent.objects.get(user=user, event=event, agree=agree)
+            us.delete()
+            UserEvent.objects.create(user=user, event=event, agree=agree)
+        except UserEvent.DoesNotExist:
+            UserEvent.objects.create(user=user, event=event, agree=agree)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 

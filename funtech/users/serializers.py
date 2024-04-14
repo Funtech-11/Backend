@@ -71,6 +71,7 @@ class UserExpertiseDetailSerializer(serializers.ModelSerializer):
 
 
 class UserAgreementSerializer(serializers.ModelSerializer):
+    agreement = serializers.IntegerField(source="pk")
 
     class Meta:
         model = UserAgreement
@@ -147,7 +148,17 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.name = validated_data.get('username', instance.username)
         instance.text = validated_data.get('email', instance.email)
-        user_data = validated_data.pop('userExper')
+        
+        if 'user_agreements' in validated_data:
+            agreement = validated_data.pop('user_agreements')
+        else:
+            agreement = []
+
+
+        if 'userExper' in validated_data:
+            user_data = validated_data.pop('userExper')
+        else:
+            user_data = []
         user = validated_data.pop('user')
         UserExpertise.objects.filter(user=user).delete()
         for item in user_data:
@@ -155,6 +166,10 @@ class UserSerializer(serializers.ModelSerializer):
                 UserExpertise.objects.create(stack_id=stack_item,
                                              expertise_id=item['expertise']['pk'],
                                              user=user)
+        
+        for item in agreement:
+            UserAgreement.objects.get_or_create(agreement_id=item['pk'], is_signed=item['is_signed'], 
+                                         user=user)
 
         instance.save()
         return instance

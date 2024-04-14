@@ -12,5 +12,5 @@ urlpatterns = [
     path('me/tickets/', TicketView.as_view()),
     path('reg/', RegisterUser.as_view()),
     path('token/', CreateToken.as_view()),
-    path('<int:pk>/events/', UserEventView.as_view())
+    path('events/', UserEventView.as_view())
 ]
