@@ -6,7 +6,7 @@ from events.serializers import (
     LocationSerializer,
     SpeakerSerializer,
     ThemeSerializer,
-    UserEventSerializer
+    UserEventSerializer,
 )
 
 
