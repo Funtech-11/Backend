@@ -11,19 +11,19 @@ from drf_spectacular.views import (
 from events.views import EventViewSet, LocationViewSet, SpeakerViewSet
 from rest_framework.routers import SimpleRouter
 
-router = SimpleRouter()
-# v1
-router.register(r'v1/events', EventViewSet)
-router.register(r'v1/speakers', SpeakerViewSet)
-router.register(r'v1/locations', LocationViewSet)
+router = SimpleRouter('v1')
+router.register(r'events', EventViewSet)
+router.register(r'speakers', SpeakerViewSet)
+router.register(r'locations', LocationViewSet)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('there-is-no-admin/', admin.site.urls),
 
     # API
     path('api/', include(router.urls)),
     path('api/v1/user/', include('users.urls')),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+
     # Optional UI:
     path(
         'api/schema/swagger-ui/',

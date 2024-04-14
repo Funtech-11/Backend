@@ -1,9 +1,10 @@
 import sys
 
 from django.core.management.base import BaseCommand
-from events.models import Theme
-from events.enums import EventThemeEnum
 from users.models import Agreement, Expertise, Stack
+
+from events.enums import EventThemeEnum
+from events.models import Theme
 
 AGREEMENTS = (
     ('текст1', True),

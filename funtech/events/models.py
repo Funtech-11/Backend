@@ -14,13 +14,11 @@ from events.enums import (
 
 
 def get_upload_event_wallpaper_path(instance, filename):
-    event_folder = instance.name
-    return os.path.join(event_folder, 'wallpaper', filename)
+    return os.path.join('wallpaper', filename)
 
 
 def get_upload_event_photos_path(instance, filename):
-    event_folder = instance.name
-    return os.path.join(event_folder, 'gallery', filename)
+    return os.path.join('gallery', filename)
 
 
 def get_upload_speaker_avatar_path(instance, filename):
@@ -28,9 +26,7 @@ def get_upload_speaker_avatar_path(instance, filename):
 
 
 def get_upload_material_path(instance, filename):
-    event_folder = instance.event.name
-    program_folder = instance.name
-    return os.path.join(event_folder, program_folder, 'materials', filename)
+    return os.path.join('materials', filename)
 
 
 class Location(models.Model):
@@ -99,8 +95,13 @@ class Event(models.Model):
         verbose_name='Название',
         max_length=255
     )
-    date_time = models.DateTimeField(
+    date_time_start = models.DateTimeField(
         verbose_name='Дата и время',
+        null=True
+    )
+    date_time_end = models.DateTimeField(
+        verbose_name='Дата и время',
+        blank=True,
         null=True
     )
     location = models.ForeignKey(
@@ -165,7 +166,7 @@ class Event(models.Model):
 
     @property
     def status(self):
-        if self.date_time.date() < datetime.now().date():
+        if self.date_time_start.date() < datetime.now().date():
             return EventStatusEnum.FINISHED.name
         elif self.users.count() >= self.max_participants:
             return EventStatusEnum.REGISTRATION_CLOSE.name
@@ -260,11 +261,13 @@ class Program(models.Model):
         verbose_name='Cпикер',
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name='programs'
     )
     information = models.TextField(
         verbose_name='Описание',
-        max_length=1000
+        max_length=1000,
+        blank=True
     )
     event = models.ForeignKey(
         Event,
@@ -274,6 +277,7 @@ class Program(models.Model):
     )
     material = models.FileField(
         verbose_name='Файл',
+        blank=True,
         upload_to=get_upload_material_path
     )
 
