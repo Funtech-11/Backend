@@ -6,4 +6,5 @@ COPY . .
 RUN pip install --upgrade pip \
     && pip install -r requirements.txt --no-cache-dir
 
+RUN chmod +x ./entrypoint.sh
 CMD [ "./entrypoint.sh" ]

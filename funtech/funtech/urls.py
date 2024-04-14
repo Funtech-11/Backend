@@ -18,7 +18,7 @@ router.register(r'v1/speakers', SpeakerViewSet)
 router.register(r'v1/locations', LocationViewSet)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('there-is-no-admin/', admin.site.urls),
 
     # API
     path('api/', include(router.urls)),
