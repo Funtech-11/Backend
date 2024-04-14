@@ -165,7 +165,8 @@ class UserExpertise(models.Model):
     expertise = models.ForeignKey(
         Expertise,
         verbose_name='Направление',
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE,
+        related_name='Exper')
     stack = models.ForeignKey(Stack,
                               on_delete=models.CASCADE,
                               blank=True)

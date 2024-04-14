@@ -16,11 +16,17 @@ from .models import (
     UserAgreement,
     Expertise,
     Stack,
-    UserExpertise
+    UserExpertise,
 )
-from events.models import UserEvent
+from events.models import UserEvent, Event
 from .serializers import (
     UserSerializer,
+    AgreementSerializer,
+    UserAgreementSerializer,
+    ExpertiseSerializer,
+    StackSerializer,
+    UserExpertiseSerializer,
+    UserEventSerializer,
     TicketSerializer
 )
 
@@ -57,11 +63,9 @@ class CreateToken(APIView):
                                                             'code': code,
                                                             'client_id': '6e05c91a25f74e4c8661025fc46baa2b',
                                                             'client_secret': '25665478fb3644edb43b3246199dd327'})
-        # print(res.text)
         if "error" in res:
             return Response(res, status=status.HTTP_400_BAD_REQUEST)
         # Token creation!
-        # print(res.json()["access_token"])
         cl = requests.get('https://login.yandex.ru/info?',
                           headers={'Authorization': "Bearer " +
                                    res.json()["access_token"]})
@@ -92,6 +96,25 @@ class TicketView(ListAPIView):
     def get_queryset(self):
         qs = UserEvent.objects.filter(user=self.request.user)
         return qs
+
+
+class UserEventView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, pk):
+
+        user = User.objects.get(pk=request.user.pk)
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, pk):
+
+        user = User.objects.get(pk=request.user.pk)
+        serializer = UserEventSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 
 # class UserDetailView(APIView):
