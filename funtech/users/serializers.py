@@ -57,12 +57,16 @@ class UserExpertiseSerializer(serializers.ModelSerializer):
 
 
 class UserExpertiseDetailSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(source='expertise.pk')
-    name = serializers.CharField(source='expertise.name')
+    id = serializers.IntegerField()
+    name = serializers.CharField()
 
     class Meta:
         model = Expertise
         fields = ('id', 'name')
+
+    def to_representation(self, instance):
+        print(instance, 11111111111111111111111)
+        return super().to_representation(instance)
 
 
 class UserAgreementSerializer(serializers.ModelSerializer):
@@ -81,34 +85,34 @@ class UserDetailSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     email = serializers.EmailField()
     workPlace = serializers.CharField(source='employment')
-    mobile = serializers.IntegerField()
+    mobile_number = serializers.IntegerField()
     last_name = serializers.CharField()
-    workPlace = serializers.CharField()
+    employment = serializers.CharField()
     photo = serializers.ImageField()
     participationFormat = serializers.ChoiceField(
         choices=[(choice.name, choice.value) for choice in EventTypeEnum],
         source='preferred_format'
     )
-    educationPrograms = UserExpertiseDetailSerializer(many=True, source='userExper')
+    educationPrograms = UserExpertiseDetailSerializer(many=True, source='expertise')
     programStack = StackDetailSerializer(many=True, source='userExper')
     userAgreements = UserAgreementSerializer(many=True,
                                              source='user_agreements')
 
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'first_name',
-            'last_name',
-            'mobile_number',
-            'photo',
-            'workPlace',
-            'position',
-            'email',
-            'educationPrograms',
-            'programStack',
-            'userAgreements'
-        )
+    # class Meta:
+    #     model = User
+    #     fields = (
+    #         'id',
+    #         'first_name',
+    #         'last_name',
+    #         'mobile_number',
+    #         'photo',
+    #         'workPlace',
+    #         'position',
+    #         'email',
+    #         'educationPrograms',
+    #         'programStack',
+    #         'userAgreements'
+    #     )
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -155,6 +159,8 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
     def to_representation(self, instance):
+        values = Expertise.objects.filter(Exper__user=instance).distinct()
+        instance.expertise = values
         serializers = UserDetailSerializer(instance, context=self.context)
         return serializers.data
 
