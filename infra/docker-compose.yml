@@ -22,7 +22,7 @@ services:
     restart: always
 
   frontend:
-    image: natashasolntseva/funtech_frontend
+    image: natashasolntseva/funtech_frontend:v1.0
     volumes:
       - static_value:/app/static/
       - frontend_static:/app/frontend_static/
