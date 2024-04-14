@@ -23,7 +23,8 @@ from .serializers import (
     UserAgreementSerializer,
     ExpertiseSerializer,
     StackSerializer,
-    UserExpertiseSerializer
+    UserExpertiseSerializer,
+    UserEventSerializer
 )
 
 
@@ -59,11 +60,9 @@ class CreateToken(APIView):
                                                             'code': code,
                                                             'client_id': '6e05c91a25f74e4c8661025fc46baa2b',
                                                             'client_secret': '25665478fb3644edb43b3246199dd327'})
-        # print(res.text)
         if "error" in res:
             return Response(res, status=status.HTTP_400_BAD_REQUEST)
         # Token creation!
-        # print(res.json()["access_token"])
         cl = requests.get('https://login.yandex.ru/info?',
                           headers={'Authorization': "Bearer " +
                                    res.json()["access_token"]})
@@ -87,6 +86,26 @@ class LogoutView(APIView):
     def post(self, request):
         Token.objects.get(key=request.auth).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class UserEventView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+
+        user = User.objects.get(pk=request.user.pk)
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, pk):
+
+        user = User.objects.get(pk=request.user.pk)
+        serializer = UserEventSerializer(event_id=pk,
+                                         data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 
 # class UserDetailView(APIView):
