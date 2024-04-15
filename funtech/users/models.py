@@ -10,9 +10,8 @@ TRUNCATED_NAME = 10
 
 class User(AbstractUser):
 
-    # REQUIRED_FIELDS = ('password',)
-    # USERNAME_FIELD = 'email'
-
+    REQUIRED_FIELDS = ('username',)
+    USERNAME_FIELD = 'email'
     first_name = models.CharField(
         'Имя',
         max_length=GENERAL_MAX_LENGTH_LIMIT

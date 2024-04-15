@@ -91,9 +91,9 @@ REST_FRAMEWORK = {
          'rest_framework.authentication.TokenAuthentication',
      ],
 }
-# DJOSER = {
-#     'LOGIN_FIELD': 'email'
-# }
+DJOSER = {
+    'LOGIN_FIELD': 'email'
+}
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Funtech API',
