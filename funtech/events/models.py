@@ -312,7 +312,7 @@ class UserEvent(models.Model):
     agree = models.BooleanField(
         verbose_name='Согласен'
     )
-    qr_code = models.CharField(
+    qr_code = models.ImageField(
         'QR код',
         max_length=50,
         null=True  # add validation

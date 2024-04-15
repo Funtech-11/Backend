@@ -15,9 +15,13 @@ from users.models import (
 
 
 class AgreementSerializer(serializers.ModelSerializer):
+    isRequired = serializers.BooleanField(
+        source='is_required'
+    )
+
     class Meta:
         model = Agreement
-        fields = '__all__'
+        fields = ('text', 'is_required')
 
 
 class StackSerializer(serializers.ModelSerializer):
@@ -47,8 +51,8 @@ class ExpertiseSerializer(serializers.ModelSerializer):
 
 
 class UserExpertiseSerializer(serializers.ModelSerializer):
-    expertise = serializers.IntegerField(source="expertise.pk")
-    stack = serializers.ListSerializer(child=serializers.IntegerField())
+    expertise = serializers.CharField(source="expertise.name")
+    stack = serializers.ListSerializer(child=StackSerializer())
 
     class Meta:
         model = UserExpertise
@@ -70,10 +74,11 @@ class UserExpertiseDetailSerializer(serializers.ModelSerializer):
 
 class UserAgreementSerializer(serializers.ModelSerializer):
     agreement = serializers.IntegerField(source="pk")
+    isSigned = serializers.BooleanField(source='is_signed')
 
     class Meta:
         model = UserAgreement
-        fields = '__all__'
+        fields = ('agreement', 'user', 'isSigned')
         read_only_fields = ('user',)
 
 
@@ -86,7 +91,7 @@ class UserDetailSerializer(serializers.Serializer):
     email = serializers.EmailField()
     workPlace = serializers.CharField(source='employment')
     mobile_number = serializers.IntegerField()
-    last_name = serializers.CharField()
+    lastName = serializers.CharField()
     employment = serializers.CharField()
     photo = serializers.ImageField()
     participationFormat = serializers.ChoiceField(
@@ -126,15 +131,18 @@ class UserSerializer(serializers.ModelSerializer):
     educationPrograms = UserExpertiseSerializer(many=True, source='userExper')
     userAgreements = UserAgreementSerializer(many=True,
                                              source='user_agreements')
+    firstName = serializers.CharField(source='first_name')
+    lastName = serializers.CharField(source='last_name')
+    mobileNumber = serializers.IntegerField(source='mobile_number')
 
     class Meta:
         model = User
         fields = (
             'id',
-            'first_name',
-            'last_name',
+            'firstName',
+            'lastName',
             'email',
-            'mobile_number',
+            'mobileNumber',
             'photo',
             'workPlace',
             'position',
@@ -187,10 +195,12 @@ class UserSerializer(serializers.ModelSerializer):
 
 class TicketSerializer(serializers.ModelSerializer):
     event = serializers.PrimaryKeyRelatedField(read_only=True)
+    userEventId = serializers.IntegerField(source='user_event_id')
+    qrCode = serializers.ImageField(source='qr_code')
 
     class Meta:
         model = UserEvent
-        fields = '__all__'
+        fields = ('userEventId', 'user', 'event', 'agree', 'qrCode')
         read_only_fields = ('__all__',)
 
 
@@ -201,23 +211,27 @@ class UserEventSerializer(serializers.ModelSerializer):
     )
     userAgreements = UserAgreementSerializer(many=True,
                                              source='user.user_agreements')
+    userEventId = serializers.IntegerField(source='user_event_id')
+    qrCode = serializers.ImageField(source='qr_code')
 
     class Meta:
         model = UserEvent
         fields = (
-            'user_event_id',
+            'userEventId',
             'user',
             'event',
             'agree',
-            'qr_code',
+            'qrCode',
             'educationPrograms',
             'userAgreements'
         )
 
 
 class UserEventCreateSerializer(UserEventSerializer):
+    userEventId = serializers.IntegerField(source='user_event_id')
+    qrCode = serializers.ImageField(source='qr_code')
 
     class Meta:
         model = UserEvent
-        fields = '__all__'
+        fields = ('userEventId', 'user', 'event', 'agree', 'qrCode')
         read_only_fields = ('__all__',)

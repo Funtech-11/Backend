@@ -71,7 +71,7 @@ class ProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = Program
         fields = [
-            'programId', 'name', 'dateTime', 'speaker', 'information', 'event',
+            'programId', 'name', 'dateTime', 'speaker', 'information',
             'material'
         ]
         extra_kwargs = {
@@ -97,10 +97,6 @@ class EventSerializer(serializers.ModelSerializer):
     )
     dateTimeEnd = serializers.DateTimeField(
         source='date_time_end',
-        required=False
-    )
-    location = serializers.PrimaryKeyRelatedField(
-        queryset=Location.objects.all(),
         required=False
     )
     maxParticipants = serializers.IntegerField(
