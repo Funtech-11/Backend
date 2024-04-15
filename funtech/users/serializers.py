@@ -10,6 +10,7 @@ from users.models import (
     UserAgreement,
     UserExpertise,
 )
+from events.serializers import EventSerializer, UserEventSerializer
 
 """ Сериализаторы объектов, которые создает админ. """
 
@@ -193,8 +194,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class TicketSerializer(serializers.ModelSerializer):
-    event = serializers.PrimaryKeyRelatedField(read_only=True)
-    userEventId = serializers.IntegerField(source='user_event_id')
+    user = UserSerializer()
+    event = EventSerializer()
+    userEventId = UserEventSerializer()
     qrCode = serializers.ImageField(source='qr_code')
 
     class Meta:
