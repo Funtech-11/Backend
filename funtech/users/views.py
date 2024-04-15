@@ -1,34 +1,16 @@
-from rest_framework.decorators import action
-from django.shortcuts import redirect
-from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import ListAPIView
-from rest_framework import viewsets, permissions, status, filters
-from rest_framework.authtoken.models import Token
-from users.permissions import OwnerOrReadOnly
 import requests
+from django.shortcuts import redirect
+from events.models import Event, UserEvent
+from rest_framework import status, viewsets
+from rest_framework.authtoken.models import Token
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from .models import (
-    User,
-    Agreement,
-    UserAgreement,
-    Expertise,
-    Stack,
-    UserExpertise,
-)
-from events.models import UserEvent, Event
-from .serializers import (
-    UserSerializer,
-    AgreementSerializer,
-    UserAgreementSerializer,
-    ExpertiseSerializer,
-    StackSerializer,
-    UserExpertiseSerializer,
-    UserEventSerializer,
-    TicketSerializer
-)
+from users.models import User
+
+from users.serializers import TicketSerializer, UserSerializer
 
 
 # events, finished_events -- actions
@@ -40,7 +22,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_object(self):
         return self.request.user
-    
+
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)
 
@@ -59,10 +41,15 @@ class CreateToken(APIView):
         if request.GET['code']:
             code = request.GET['code']
 
-        res = requests.post('https://oauth.yandex.ru/token', data={'grant_type': 'authorization_code',
-                                                            'code': code,
-                                                            'client_id': '6e05c91a25f74e4c8661025fc46baa2b',
-                                                            'client_secret': '25665478fb3644edb43b3246199dd327'})
+        res = requests.post(
+            'https://oauth.yandex.ru/token',
+            data={
+                'grant_type': 'authorization_code',
+                'code': code,
+                'client_id': '6e05c91a25f74e4c8661025fc46baa2b',
+                'client_secret': '25665478fb3644edb43b3246199dd327'
+            }
+        )
         if "error" in res:
             return Response(res, status=status.HTTP_400_BAD_REQUEST)
         # Token creation!
@@ -89,6 +76,7 @@ class LogoutView(APIView):
     def post(self, request):
         Token.objects.get(key=request.auth).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class TicketView(ListAPIView):
     serializer_class = TicketSerializer
@@ -127,7 +115,6 @@ class UserEventView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-
 # class UserDetailView(APIView):
 
 #     permission_classes = (OwnerOrReadOnly,)
@@ -139,9 +126,7 @@ class UserEventView(APIView):
 #             return Response(status=status.HTTP_404_NOT_FOUND)
 #         serializer = UserSerializer(user)
 #         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
 #     def post(self, request, pk):
 #         serializer = UserSerializer(data=request.data)
 #         serializer.is_valid(raise_exception=True)
-
-
