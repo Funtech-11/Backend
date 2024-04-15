@@ -29,7 +29,7 @@ class User(AbstractUser):
         max_length=GENERAL_MAX_LENGTH_LIMIT,
         unique=True,
     )
-    mobile_number = models.PositiveSmallIntegerField(null=True)  # валидация формата? +7(111)111-11-11
+    mobile_number = models.PositiveSmallIntegerField(null=True)
     photo = models.ImageField(blank=True, null=True)
     employment = models.CharField(
         'Место работы',
@@ -150,8 +150,8 @@ class Stack(models.Model):
         verbose_name_plural = 'стек'
         default_related_name = 'stack_items'
 
-#    def __str__(self):
-#        return self.name[:TRUNCATED_NAME]
+    # def __str__(self):
+    #     return self.name[:TRUNCATED_NAME]
 
 
 class UserExpertise(models.Model):
@@ -174,12 +174,12 @@ class UserExpertise(models.Model):
     class Meta:
         verbose_name = 'направление пользователя'
         verbose_name_plural = 'направления пользователя'
-#        constraints = (
-#            models.UniqueConstraint(
-#                fields=('user', 'expertise', 'stack'),
-#                name='unique_expertise'
-#            ),
-#        )
+    #     constraints = (
+    #         models.UniqueConstraint(
+    #             fields=('user', 'expertise', 'stack'),
+    #             name='unique_expertise'
+    #         ),
+    #     )
 
-#    def __str__(self):
-#        return f' Направление и стек пользователя {self.user[:TRUNCATED_NAME]}'
+    # def __str__(self):
+    #     return f' Направление и стек пользователя {self.user[:TRUNCATED_NAME]}'
