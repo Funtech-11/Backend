@@ -1,5 +1,12 @@
 from django.test import TestCase
-from users.models import User, Agreement, UserAgreement, Expertise, Stack, UserExpertise
+from users.models import (
+    Agreement,
+    Expertise,
+    Stack,
+    User,
+    UserAgreement,
+    UserExpertise
+)
 
 
 class UserModelTestCase(TestCase):

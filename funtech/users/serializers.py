@@ -1,7 +1,6 @@
 from events.enums import EventTypeEnum
-from rest_framework import serializers
-
 from events.models import UserEvent
+from rest_framework import serializers
 
 from users.models import (
     Agreement,
@@ -11,7 +10,6 @@ from users.models import (
     UserAgreement,
     UserExpertise,
 )
-from events.models import UserEvent
 
 """ Сериализаторы объектов, которые создает админ. """
 
@@ -95,7 +93,9 @@ class UserDetailSerializer(serializers.Serializer):
         choices=[(choice.name, choice.value) for choice in EventTypeEnum],
         source='preferred_format'
     )
-    educationPrograms = UserExpertiseDetailSerializer(many=True, source='expertise')
+    educationPrograms = UserExpertiseDetailSerializer(
+        many=True, source='expertise'
+    )
     programStack = StackDetailSerializer(many=True, source='userExper')
     userAgreements = UserAgreementSerializer(many=True,
                                              source='user_agreements')
@@ -141,19 +141,18 @@ class UserSerializer(serializers.ModelSerializer):
             'experience',
             'participationFormat',
             'educationPrograms',
-            #'programStack',
+            # 'programStack',
             'userAgreements'
         )
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get('username', instance.username)
         instance.text = validated_data.get('email', instance.email)
-        
+
         if 'user_agreements' in validated_data:
             agreement = validated_data.pop('user_agreements')
         else:
             agreement = []
-
 
         if 'userExper' in validated_data:
             user_data = validated_data.pop('userExper')
@@ -163,13 +162,18 @@ class UserSerializer(serializers.ModelSerializer):
         UserExpertise.objects.filter(user=user).delete()
         for item in user_data:
             for stack_item in item['stack']:
-                UserExpertise.objects.create(stack_id=stack_item,
-                                             expertise_id=item['expertise']['pk'],
-                                             user=user)
-        
+                UserExpertise.objects.create(
+                    stack_id=stack_item,
+                    expertise_id=item['expertise']['pk'],
+                    user=user
+                )
+
         for item in agreement:
-            UserAgreement.objects.get_or_create(agreement_id=item['pk'], is_signed=item['is_signed'], 
-                                         user=user)
+            UserAgreement.objects.get_or_create(
+                agreement_id=item['pk'],
+                is_signed=item['is_signed'],
+                user=user
+            )
 
         instance.save()
         return instance
@@ -192,7 +196,9 @@ class TicketSerializer(serializers.ModelSerializer):
 
 class UserEventSerializer(serializers.ModelSerializer):
 
-    educationPrograms = UserExpertiseSerializer(many=True, source='user.userExper')
+    educationPrograms = UserExpertiseSerializer(
+        many=True, source='user.userExper'
+    )
     userAgreements = UserAgreementSerializer(many=True,
                                              source='user.user_agreements')
 
