@@ -52,12 +52,12 @@ class ExpertiseSerializer(serializers.ModelSerializer):
 
 
 class UserExpertiseSerializer(serializers.ModelSerializer):
-    expertise = serializers.IntegerField(source="expertise.pk")
-    stack = serializers.ListSerializer(child=serializers.IntegerField())
+    expertiseId = serializers.IntegerField(source="expertise.pk")
+    stackId = serializers.ListSerializer(child=serializers.IntegerField())
 
     class Meta:
         model = UserExpertise
-        fields = ('stack', 'expertise')
+        fields = ('stackId', 'expertiseId')
 
 
 class UserExpertiseDetailSerializer(serializers.ModelSerializer):
@@ -74,12 +74,12 @@ class UserExpertiseDetailSerializer(serializers.ModelSerializer):
 
 
 class UserAgreementSerializer(serializers.ModelSerializer):
-    agreement = serializers.IntegerField(source="pk")
+    agreementId = serializers.IntegerField(source="pk")
     isSigned = serializers.BooleanField(source='is_signed')
 
     class Meta:
         model = UserAgreement
-        fields = ('agreement', 'user', 'isSigned')
+        fields = ('agreementId', 'user', 'isSigned')
         read_only_fields = ('user',)
 
 
@@ -159,8 +159,8 @@ class UserSerializer(serializers.ModelSerializer):
         instance.text = validated_data.get('email', instance.email)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
-        if 'userAgreements' in validated_data:
-            agreement = validated_data.pop('userAgreements')
+        if 'user_agreements' in validated_data:
+            agreement = validated_data.pop('user_agreements')
         else:
             agreement = []
         print(validated_data)
@@ -171,7 +171,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = validated_data.pop('user')
         UserExpertise.objects.filter(user=user).delete()
         for item in user_data:
-            for stack_item in item['stack']:
+            for stack_item in item['stackId']:
                 UserExpertise.objects.create(
                     stack_id=stack_item,
                     expertise_id=item['expertise']['pk'],
@@ -180,8 +180,8 @@ class UserSerializer(serializers.ModelSerializer):
 
         for item in agreement:
             UserAgreement.objects.get_or_create(
-                agreement_id=item['agreement'],
-                is_signed=item['isSigned'],
+                agreement_id=item['pk'],
+                is_signed=item['is_signed'],
                 user=user
             )
 
