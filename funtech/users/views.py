@@ -98,7 +98,7 @@ class UserEventView(APIView):
     def post(self, request):
 
         user = User.objects.get(pk=request.user.pk)
-        print(user)
+        print(request.data)
         event_id = request.data.pop('event')
         serializer = UserSerializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)

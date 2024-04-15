@@ -10,6 +10,7 @@ from drf_spectacular.views import (
 )
 from events.views import EventViewSet, LocationViewSet, SpeakerViewSet
 from rest_framework.routers import SimpleRouter
+from rest_framework.authtoken import views
 
 router = SimpleRouter()
 router.register(r'v1/events', EventViewSet)
@@ -38,7 +39,15 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     # JWT-эндпоинты, для управления JWT-токенами:
     path('auth/', include('djoser.urls.jwt')),
+    path('auth/', include('djoser.urls.authtoken')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+# {
+#     "username": "name",
+#     "email": "admin@admin.ru",
+#     "id": 1
+# }

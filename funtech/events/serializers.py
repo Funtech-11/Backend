@@ -80,7 +80,7 @@ class ProgramSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
-    location = LocationSerializer()
+    location = LocationSerializer(required=False)
     theme = ThemeSerializer(
         read_only=True
     )

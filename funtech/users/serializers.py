@@ -156,12 +156,11 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.name = validated_data.get('username', instance.username)
         instance.text = validated_data.get('email', instance.email)
-
         if 'user_agreements' in validated_data:
             agreement = validated_data.pop('user_agreements')
         else:
             agreement = []
-
+        print(agreement)
         if 'userExper' in validated_data:
             user_data = validated_data.pop('userExper')
         else:
