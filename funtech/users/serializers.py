@@ -52,8 +52,8 @@ class ExpertiseSerializer(serializers.ModelSerializer):
 
 
 class UserExpertiseSerializer(serializers.ModelSerializer):
-    expertise = serializers.CharField(source="expertise.name")
-    stack = serializers.ListSerializer(child=StackSerializer())
+    expertise = serializers.IntegerField(source="expertise.pk")
+    stack = serializers.ListSerializer(child=serializers.IntegerField())
 
     class Meta:
         model = UserExpertise
@@ -88,11 +88,11 @@ class UserAgreementSerializer(serializers.ModelSerializer):
 
 class UserDetailSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    first_name = serializers.CharField()
+    firstName = serializers.CharField(source='first_name')
     email = serializers.EmailField()
     workPlace = serializers.CharField(source='employment')
     mobile_number = serializers.IntegerField()
-    lastName = serializers.CharField()
+    lastName = serializers.CharField(source='last_name')
     employment = serializers.CharField()
     photo = serializers.ImageField()
     participationFormat = serializers.ChoiceField(
@@ -157,11 +157,13 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.name = validated_data.get('username', instance.username)
         instance.text = validated_data.get('email', instance.email)
-        if 'user_agreements' in validated_data:
-            agreement = validated_data.pop('user_agreements')
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        if 'userAgreements' in validated_data:
+            agreement = validated_data.pop('userAgreements')
         else:
             agreement = []
-        print(agreement)
+        print(validated_data)
         if 'userExper' in validated_data:
             user_data = validated_data.pop('userExper')
         else:
@@ -178,8 +180,8 @@ class UserSerializer(serializers.ModelSerializer):
 
         for item in agreement:
             UserAgreement.objects.get_or_create(
-                agreement_id=item['pk'],
-                is_signed=item['is_signed'],
+                agreement_id=item['agreement'],
+                is_signed=item['isSigned'],
                 user=user
             )
 

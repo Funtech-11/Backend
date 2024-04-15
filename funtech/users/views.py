@@ -104,7 +104,7 @@ class UserEventView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save(user=self.request.user)
         event = Event.objects.get(pk=event_id)
-        agree = request.data['userAgreements'][0]['is_signed']
+        agree = request.data['userAgreements'][0]['isSigned']
         try:
             us = UserEvent.objects.get(user=user, event=event, agree=agree)
             us.delete()
