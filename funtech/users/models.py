@@ -104,7 +104,7 @@ class UserAgreement(models.Model):
     class Meta:
         verbose_name = 'соглашение пользователя'
         verbose_name_plural = 'соглашения пользователя'
-        default_related_name = 'agreements'
+        default_related_name = 'user_agreements'
         constraints = (
             models.UniqueConstraint(
                 fields=('user', 'agreement'),
@@ -125,6 +125,8 @@ class Expertise(models.Model):
         max_length=MAX_WORKPLACE_CHARS,
         unique=True
     )
+    stacks = models.ManyToManyField('Stack',
+                                    through='UserExpertise')
 
     class Meta:
         verbose_name = 'направление'
@@ -142,24 +144,14 @@ class Stack(models.Model):
         'Название',
         max_length=MAX_WORKPLACE_CHARS,
     )
-    expertise = models.ForeignKey(
-        Expertise,
-        verbose_name='Направление',
-        on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'стек'
         verbose_name_plural = 'стек'
         default_related_name = 'stack_items'
-        constraints = (
-            models.UniqueConstraint(
-                fields=('name', 'expertise'),
-                name='unique_stack'
-            ),
-        )
 
-    def __str__(self):
-        return self.name[:TRUNCATED_NAME]
+#    def __str__(self):
+#        return self.name[:TRUNCATED_NAME]
 
 
 class UserExpertise(models.Model):
@@ -168,22 +160,26 @@ class UserExpertise(models.Model):
     user = models.ForeignKey(
         User,
         verbose_name='Пользователь',
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE,
+        related_name='userExper')
     expertise = models.ForeignKey(
         Expertise,
         verbose_name='Направление',
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE,
+        related_name='Exper')
+    stack = models.ForeignKey(Stack,
+                              on_delete=models.CASCADE,
+                              blank=True)
 
     class Meta:
         verbose_name = 'направление пользователя'
         verbose_name_plural = 'направления пользователя'
-        default_related_name = 'user_expertise'
-        constraints = (
-            models.UniqueConstraint(
-                fields=('user', 'expertise'),
-                name='unique_expertise'
-            ),
-        )
+#        constraints = (
+#            models.UniqueConstraint(
+#                fields=('user', 'expertise', 'stack'),
+#                name='unique_expertise'
+#            ),
+#        )
 
-    def __str__(self):
-        return f' Направление и стек пользователя {self.user[:TRUNCATED_NAME]}'
+#    def __str__(self):
+#        return f' Направление и стек пользователя {self.user[:TRUNCATED_NAME]}'
