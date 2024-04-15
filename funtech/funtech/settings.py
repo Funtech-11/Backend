@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'users',
     'events',
+    'djoser',
 ]
 
 MIDDLEWARE = [
@@ -87,9 +88,13 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ],
+         'rest_framework.authentication.TokenAuthentication',
+     ],
 }
+# DJOSER = {
+#     'LOGIN_FIELD': 'email'
+# }
+
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Funtech API',
     'DESCRIPTION': 'Funtech Test Swagger API description',
