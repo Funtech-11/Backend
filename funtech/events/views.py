@@ -1,4 +1,5 @@
 from drf_spectacular.utils import extend_schema
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.viewsets import ModelViewSet
 
 from events.models import Event, Location, Speaker
@@ -13,6 +14,12 @@ class EventViewSet(ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     http_method_names = ['get', 'post', 'patch', 'delete']
+
+    def get_permissions(self):
+        if self.action == 'create' or self.action == 'partial_update' or self.action == 'destroy':
+            return (IsAdminUser(),)
+        else:
+            return (AllowAny(),)
 
     @extend_schema(
         summary='Посмотреть список мероприятий',
@@ -54,6 +61,7 @@ class SpeakerViewSet(ModelViewSet):
     queryset = Speaker.objects.all()
     serializer_class = SpeakerSerializer
     http_method_names = ['get', 'post', 'patch', 'delete']
+    permission_classes = (IsAdminUser,)
 
     @extend_schema(
         summary='Посмотреть список спикеров',
@@ -95,6 +103,7 @@ class LocationViewSet(ModelViewSet):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
     http_method_names = ['get', 'post', 'patch', 'delete']
+    permission_classes = (IsAdminUser,)
 
     @extend_schema(
         summary='Посмотреть список площадок',

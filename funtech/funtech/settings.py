@@ -56,22 +56,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'funtech.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 # DATABASES = {
 #     'default': {
-#         'ENGINE': os.getenv('ENGINE', default='django.db.backends.postgresql'),
-#         'NAME': os.getenv('DB_NAME', default='postgres'),
-#         'USER': os.getenv('POSTGRES_USER', default='postgres'),
-#         'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
-#         'HOST': os.getenv('DB_HOST', default='db'),
-#         'PORT': os.getenv('DB_PORT', default=5432),
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': os.getenv('ENGINE', default='django.db.backends.postgresql'),
+        'NAME': os.getenv('DB_NAME', default='postgres'),
+        'USER': os.getenv('POSTGRES_USER', default='postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
+        'HOST': os.getenv('DB_HOST', default='db'),
+        'PORT': os.getenv('DB_PORT', default=5432),
+    }
+}
 
 AUTH_USER_MODEL = "users.User"
 
@@ -102,10 +102,10 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
 }
 
-ALLOWED_HOSTS = ['*']
-# CORS
-CORS_URLS_REGEX = r'^/api/.*$'
-CORS_ORIGIN_ALLOW_ALL = True
+# ALLOWED_HOSTS = ['*']
+# # CORS
+# CORS_URLS_REGEX = r'^/api/.*$'
+# CORS_ORIGIN_ALLOW_ALL = True
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
@@ -125,3 +125,23 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Cookie
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
+
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173"
+# ]
+
+# CORS_ALLOW_CREDENTIALS = True
+
+ALLOWED_HOSTS = ['*']
+# CORS_URLS_REGEX = r'^/api/.*$'
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = [
+#     'http://eventfun.ru/',
+#     'http://84.252.73.12'
+# ]
+# CORS_ALLOW_METHODS = ["DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT"]
+# CORS_ALLOW_HEADERS = ["Accept", "Authorization", "Content-Type"]
+CSRF_TRUSTED_ORIGINS = [
+    'http://eventfun.ru/',
+    'http://84.252.73.12/'
+]

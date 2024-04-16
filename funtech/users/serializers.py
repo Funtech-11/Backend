@@ -155,8 +155,8 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
     def update(self, instance, validated_data):
-        instance.name = validated_data.get('username', instance.username)
-        instance.text = validated_data.get('email', instance.email)
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         if 'userAgreements' in validated_data:
