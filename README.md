@@ -13,6 +13,10 @@
 [Ссылка на проект](http://84.252.73.12/)
 [Ссылка на API](http://84.252.73.12/api/schema/redoc/)
 
+### Swagger:
+- http://eventfun.ru/api/schema/redoc/
+- http://eventfun.ru/api/schema/swagger-ui/ 
+
 # Стек технологий
 
 <div> 
