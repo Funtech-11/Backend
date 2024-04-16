@@ -14,6 +14,8 @@ class EventViewSet(ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     http_method_names = ['get', 'post', 'patch', 'delete']
+    ordering_fields = ['status', 'dateTimeStart']
+    ordering = ['-status', '-dateTimeStart']
 
     def get_permissions(self):
         if self.action == 'create' or self.action == 'partial_update' or self.action == 'destroy':
