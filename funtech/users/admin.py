@@ -11,4 +11,19 @@ class UserAgreementInline(admin.StackedInline):
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
+    list_display = [
+        'first_name', 'last_name', 'email', 'mobile_number', 'photo',
+        'employment', 'position', 'experience', 'preferred_format'
+    ]
+    fieldsets = (
+        (
+            'Main Fields', {
+                'fields': (
+                    'first_name', 'last_name', 'email', 'mobile_number',
+                    'photo', 'employment', 'position', 'experience',
+                    'preferred_format'
+                ),
+            }
+        ),
+    )
     ordering = ('last_name',)

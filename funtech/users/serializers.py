@@ -52,8 +52,8 @@ class ExpertiseSerializer(serializers.ModelSerializer):
 
 
 class UserExpertiseSerializer(serializers.ModelSerializer):
-    expertise = serializers.IntegerField(source="expertise.pk")
-    stack = serializers.ListSerializer(child=serializers.IntegerField())
+    expertise = serializers.CharField(source="expertise.name")
+    stack = serializers.ListSerializer(child=StackSerializer())
 
     class Meta:
         model = UserExpertise
