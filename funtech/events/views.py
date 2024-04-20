@@ -11,11 +11,9 @@ from events.serializers import (
 
 
 class EventViewSet(ModelViewSet):
-    queryset = Event.objects.all().order_by('status', 'date_time_start')
+    queryset = Event.objects.all().order_by('-date_time_start')
     serializer_class = EventSerializer
     http_method_names = ['get', 'post', 'patch', 'delete']
-    # ordering_fields = ['-dateTimeStart']
-    # ordering = ['name']
 
     def get_permissions(self):
         if (
