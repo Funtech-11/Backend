@@ -5,15 +5,16 @@ services:
   db:
     image: postgres:16.1-alpine3.19
     volumes:
-      - infra_db_data_prod:/var/lib/postgresql/data/
+      - db:/var/lib/postgresql/data/
     env_file:
       - ./.env
+    # порты нужно указывать, чтобы можно было подключиться через DBeaver
     ports:
       - 5432:5432
 
   backend:
-    # image: sivikgosh/backend_11
-    build: ../funtech/
+    image: sivikgosh/backend_11:programs
+    # build: ../funtech/
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
@@ -48,8 +49,7 @@ services:
       - frontend
 
 volumes:
-  # db_value:
-  infra_db_data_prod:
+  db:
     external: true
   static_value:
   media_value:
