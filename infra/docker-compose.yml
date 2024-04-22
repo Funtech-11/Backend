@@ -4,6 +4,7 @@ services:
 
   db:
     image: postgres:16.1-alpine3.19
+    container_name: db
     volumes:
       - db:/var/lib/postgresql/data/
     env_file:
@@ -15,6 +16,7 @@ services:
   backend:
     image: sivikgosh/backend_11:programs
     # build: ../funtech/
+    container_name: backend
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
@@ -26,6 +28,7 @@ services:
 
   frontend:
     image: natashasolntseva/funtech_frontend:v1.12
+    container_name: frontend
     volumes:
       - static_value:/app/static/
       - frontend_static:/app/frontend_static/
@@ -36,6 +39,7 @@ services:
 
   nginx:
     image: nginx:1.19.3
+    container_name: nginx
     ports:
       - 80:80
       - 443:443
