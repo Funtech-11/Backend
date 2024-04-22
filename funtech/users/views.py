@@ -99,7 +99,7 @@ class UserEventView(APIView):
 
         user = User.objects.get(pk=request.user.pk)
         print(request.data)
-        event_id = request.data.pop('event')
+        event_id = request.data.pop('eventId')
         serializer = UserSerializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save(user=self.request.user)
