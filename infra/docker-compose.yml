@@ -14,8 +14,8 @@ services:
       - 5432:5432
 
   backend:
-    image: sivikgosh/backend_11:programs
-    # build: ../funtech/
+    # image: sivikgosh/backend_11:programs
+    build: ../funtech/
     container_name: backend
     volumes:
       - static_value:/app/static/
