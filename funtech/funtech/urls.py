@@ -10,7 +10,6 @@ from drf_spectacular.views import (
 )
 from events.views import EventViewSet, LocationViewSet, SpeakerViewSet
 from rest_framework.routers import SimpleRouter
-from rest_framework.authtoken import views
 
 router = SimpleRouter()
 router.register(r'v1/events', EventViewSet)

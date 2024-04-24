@@ -180,5 +180,5 @@ class UserExpertise(models.Model):
     #         ),
     #     )
 
-    # def __str__(self):
-    #     return f' Направление и стек пользователя {self.user[:TRUNCATED_NAME]}'
+    def __str__(self):
+        return f'Направление и стек пользователя {self.user[:TRUNCATED_NAME]}'

@@ -2,7 +2,8 @@ import re
 
 from django.core.exceptions import ValidationError
 
-INVALID_MOBILE_NUMBER_ERROR_TEXT = 'номер телефона не соответствует формату: +* *** *** ** **'
+INVALID_MOBILE_NUMBER_ERROR_TEXT = 'номер телефона не соответствует формату: \
+                                    +* *** *** ** **'
 
 
 def mobile_number_validator(value):
