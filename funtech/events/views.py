@@ -11,12 +11,16 @@ from events.serializers import (
 
 
 class EventViewSet(ModelViewSet):
-    queryset = Event.objects.all()
+    queryset = Event.objects.all().order_by('-date_time_start')
     serializer_class = EventSerializer
     http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_permissions(self):
-        if self.action == 'create' or self.action == 'partial_update' or self.action == 'destroy':
+        if (
+            self.action == 'create'
+            or self.action == 'partial_update'
+            or self.action == 'destroy'
+        ):
             return (IsAdminUser(),)
         else:
             return (AllowAny(),)

@@ -134,6 +134,13 @@ class EventSerializer(serializers.ModelSerializer):
             'eventId': {'required': False}
         }
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['programs'] = sorted(
+            representation['programs'], key=lambda x: x['dateTime']
+        )
+        return representation
+
 
 class UserEventSerializer(serializers.ModelSerializer):
     # user

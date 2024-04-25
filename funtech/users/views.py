@@ -1,16 +1,18 @@
-import requests
-from django.shortcuts import redirect
+# import requests
+# from django.shortcuts import redirect
 from events.models import Event, UserEvent
 from rest_framework import status, viewsets
-from rest_framework.authtoken.models import Token
+# from rest_framework.authtoken.models import Token
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from users.models import User
-
 from users.serializers import TicketSerializer, UserSerializer
+
+
+AUTH_URL = 'https://oauth.yandex.ru/'
 
 
 # events, finished_events -- actions
@@ -30,8 +32,10 @@ class UserViewSet(viewsets.ModelViewSet):
 # class RegisterUser(APIView):
 #     """User registration API."""
 
-#     def get(self, request):
-#         return redirect('https://oauth.yandex.ru/authorize?response_type=code&client_id=6e05c91a25f74e4c8661025fc46baa2b')
+    # def get(self, request):
+    #     return redirect(
+    #         f'{AUTH_URL}authorize?response_type=code&client_id={CLIENT_ID}'
+    #     )
 
 
 # class CreateToken(APIView):
@@ -99,7 +103,7 @@ class UserEventView(APIView):
 
         user = User.objects.get(pk=request.user.pk)
         print(request.data)
-        event_id = request.data.pop('event')
+        event_id = request.data.pop('eventId')
         serializer = UserSerializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save(user=self.request.user)

@@ -2,6 +2,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from events.enums import EventTypeEnum, ExperienceEnum
+from .validators import mobile_number_validator
 
 GENERAL_MAX_LENGTH_LIMIT = 255
 MAX_WORKPLACE_CHARS = 100
@@ -25,7 +26,9 @@ class User(AbstractUser):
         max_length=GENERAL_MAX_LENGTH_LIMIT,
         unique=True,
     )
-    mobile_number = models.PositiveSmallIntegerField(null=True)
+    mobile_number = models.PositiveSmallIntegerField(
+        null=True,
+        validators=(mobile_number_validator,))
     photo = models.ImageField(blank=True, null=True)
     employment = models.CharField(
         'Место работы',
@@ -177,5 +180,5 @@ class UserExpertise(models.Model):
     #         ),
     #     )
 
-    # def __str__(self):
-    #     return f' Направление и стек пользователя {self.user[:TRUNCATED_NAME]}'
+    def __str__(self):
+        return f'Направление и стек пользователя {self.user[:TRUNCATED_NAME]}'

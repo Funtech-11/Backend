@@ -1,8 +1,14 @@
 from django.urls import path
 from rest_framework import routers
-from django.urls import path, include
-#from .views import CreateToken, RegisterUser, UserViewSet, TicketView, UserEventView
-from .views import UserViewSet, TicketView, UserEventView
+
+from users.views import (
+    # CreateToken,
+    # RegisterUser,
+    TicketView,
+    UserEventView,
+    UserViewSet,
+)
+
 router = routers.DefaultRouter()
 # router.register(r'me', UserViewSet, basename='user')
 

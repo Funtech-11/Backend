@@ -73,5 +73,5 @@ class ProgramAdmin(admin.ModelAdmin):
 @admin.register(UserEvent)
 class UserEventAdmin(admin.ModelAdmin):
     list_display = (
-        'user_event_id', 'user', 'event', 'agree'
+        'user_event_id', 'user', 'event', 'agree', 'qr_code'
     )
