@@ -13,6 +13,10 @@
 [Ссылка на проект](http://84.252.73.12/)
 [Ссылка на API](http://84.252.73.12/api/schema/redoc/)
 
+### Swagger:
+- http://eventfun.ru/api/schema/redoc/
+- http://eventfun.ru/api/schema/swagger-ui/ 
+
 # Стек технологий
 
 <div> 
@@ -67,4 +71,6 @@ python manage.py load_data
 python manage.py runserver
 ```
 
-API будет доступно по адресу http://localhost:8000/api/schema/redoc/
+Swagger будет доступен по адресам:
+- http://localhost:8000/api/schema/redoc/
+- http://localhost:8000/api/schema/swagger-ui/
