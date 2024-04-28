@@ -1,70 +1,96 @@
-# О проекте
+# Funtech Backend
 
-Проект является MVP Backend-приложения для IT мероприятий.
+##### Проект является MVP Backend-приложения для IT мероприятий.
 
-# О команде
+## Команда
 
-- Денис - [@Denmais09](https://t.me/Denmais09)
-- Александр - [@alexeont](https://t.me/alexeont)
-- Георгий - [@Sivikgosh](https://t.me/SivikGosh)
+```Денис``` [@Denmais09](https://t.me/Denmais09)
 
-# Ссылка на проект
+```Александр``` [@alexeont](https://t.me/alexeont)
 
-[Ссылка на проект](http://84.252.73.12/)
-[Ссылка на API](http://84.252.73.12/api/schema/redoc/)
+```Георгий``` [@SivikGosh](https://t.me/SivikGosh)
 
-# Стек технологий
+## Ссылки на проект
 
-<div> 
- <img src="https://img.shields.io/badge/Django-%23404d59.svg?style=for-the-badge&logo=django&logoColor=green" alt="Django Badge" />
- <img src="https://img.shields.io/badge/djangorestframework-%23404d59.svg?style=for-the-badge&logo=djangorestframework&logoColor=green" alt="Django Rest Framework Badge" />
- <img src="https://img.shields.io/badge/drf--spectacular-%23404d59.svg?style=for-the-badge&logo=drf&logoColor=green" alt="DRF Spectacular Badge" />
- <img src="https://img.shields.io/badge/django--cors--headers-%23404d59.svg?style=for-the-badge&logo=django&logoColor=green" alt="Django CORS Headers Badge" />
- <img src="https://img.shields.io/badge/psycopg2--binary-%23404d59.svg?style=for-the-badge&logo=postgresql&logoColor=green" alt="Psycopg2 Binary Badge" />
- <img src="https://img.shields.io/badge/asgiref-%23404d59.svg?style=for-the-badge&logo=python&logoColor=green" alt="Asgiref Badge" />
- <img src="https://img.shields.io/badge/gunicorn-%23404d59.svg?style=for-the-badge&logo=python&logoColor=green" alt="Gunicorn Badge" />
- <img src="https://img.shields.io/badge/requests-%23404d59.svg?style=for-the-badge&logo=requests&logoColor=green" alt="Requests Badge" />
- <img src="https://img.shields.io/badge/PyYAML-%23404d59.svg?style=for-the-badge&logo=python&logoColor=green" alt="PyYAML Badge" />
- <img src="https://img.shields.io/badge/pillow-%23404d59.svg?style=for-the-badge&logo=pillow&logoColor=green" alt="Pillow Badge" />
-</div>
+```Frontend``` [Яндекс.Ивенты](http://84.252.73.12/)
 
-# Установка локально без Docker
+```API``` [Swagger UI](http://84.252.73.12/api/schema/swagger-ui/), [Redoc](http://84.252.73.12/api/schema/redoc/)
 
-Клонировать репозиторий:
+## Стек технологий
+
+ <img src="https://img.shields.io/badge/python-%233776AB.svg?style=for-the-badge&logo=python&logoColor=white" alt="Python Badge" />
+<img src="https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white" alt="Django Badge" />
+<img src="https://img.shields.io/badge/gunicorn-%23499848.svg?style=for-the-badge&logo=gunicorn&logoColor=white" alt="Gunicorn Badge" />
+
+## Установка
+
+#### Клонировать репозиторий
 
 ```bash
-git clone
+$ git clone git@github.com:Funtech-11/Backend.git
 ```
 
-Создать и активировать виртуальное окружение:
+#### Создать и активировать виртуальное окружение
 
+###### Windows
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+$ python -m venv venv
+$ source venv/Scripts/activate
 ```
-
-Установить библиотеки
-
+###### Linux
 ```bash
-cd funtech/
-pip3 install -r requirements.txt
+$ python3 -m venv venv
+$ source venv/bin/activate
 ```
 
-Запустить проект:
+#### Установить библиотеки
 
+###### Windows
 ```bash
-python manage.py migrate
-
-python createsuperuser
-- назначить логин
-- добавить имя
-- добавить фамилию
-- установить пароль
-- добавить email
-
-python manage.py load_data
-
-python manage.py runserver
+(venv) $ cd funtech/
+(venv) $ pip-sync requirements.txt
+```
+###### Linux
+```bash
+(venv) $ cd funtech/
+(venv) $ pip-sync -r requirements.txt
 ```
 
-API будет доступно по адресу http://localhost:8000/api/schema/redoc/
+#### Запустить проект:
+
+###### Windows
+```bash
+(venv) $ python manage.py migrate
+
+(venv) $ python manage.py createsuperuser
+         Email:
+         Username:
+         Имя:
+         Фамилия:
+         Password:
+         Password (again):
+
+(venv) $ python manage.py load_data
+(venv) $ python manage.py runserver
+```
+###### Linux
+```bash
+(venv) $ python3 manage.py migrate
+
+(venv) $ python3 manage.py createsuperuser
+         Email:
+         Username:
+         Имя:
+         Фамилия:
+         Password:
+         Password (again):
+
+(venv) $ python3 manage.py load_data
+(venv) $ python3 manage.py runserver
+```
+
+##### API будет доступно по адресам:
+
+```Redoc``` http://localhost:8000/api/schema/redoc/
+
+```Swagger UI``` http://localhost:8000/api/schema/swagger-ui/

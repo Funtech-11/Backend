@@ -26,7 +26,8 @@ class User(AbstractUser):
         max_length=GENERAL_MAX_LENGTH_LIMIT,
         unique=True,
     )
-    mobile_number = models.PositiveSmallIntegerField(
+    mobile_number = models.CharField(
+        max_length=20,
         null=True,
         validators=(mobile_number_validator,))
     photo = models.ImageField(blank=True, null=True)
