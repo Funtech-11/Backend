@@ -1,5 +1,9 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -96,12 +100,14 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
 }
 
-ALLOWED_HOSTS = ['*']
+site_url = os.getenv('SITE_URL', default='localhost')
 
-CORS_ALLOW_ALL_ORIGINS = True
+ALLOWED_HOSTS = [f'https://{site_url}', f'http://{site_url}', site_url]
+
+CORS_ALLOWED_ORIGINS = [f'https://{site_url}', f'http://{site_url}', site_url]
 
 # Internationalization
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ru-ru"
 TIME_ZONE = "Europe/Moscow"
 USE_I18N = True
 USE_TZ = True
@@ -118,7 +124,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Cookie
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
-CSRF_TRUSTED_ORIGINS = [
-    "http://eventfun.ru/",
-    "http://84.252.73.12/"
-    ]
+CSRF_TRUSTED_ORIGINS = [f'https://{site_url}', f'http://{site_url}', site_url]
